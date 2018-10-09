@@ -1,4 +1,5 @@
 import click
+import getpass
 from .config import Configuration
 from .interface import SteemExplorer
 from pprint import pprint
@@ -16,9 +17,15 @@ class PyWallet(Cmd):
 
     def prehook(self) -> None:
         self.poutput("Python Steem Wallet Interface")
+        stm.check_wallet()
         if not conf.is_config():
             self.prompt = ">>> "
+            print("Initializing your witness.")
             self.do_init()
+        elif not stm.is_wallet():
+            self.prompt = ">>> "
+            print("Initializing your wallet.")
+            self.do_new_wallet()
         else:
             self.prompt = "Locked >>> "
         return None
@@ -41,8 +48,25 @@ class PyWallet(Cmd):
                 conf.write_config()
                 print("Your configuration has been initialized.")
 
-                #ask them if they want to enable witness
-                #ask if they want to add a wallet
+        if not stm.is_wallet():
+            print("Initializing your wallet.")
+            self.do_new_wallet()
+
+        #ask them if they want to enable witness
+
+    def do_new_wallet(self, line=''):
+        """Run: 'new_wallet'
+        Initialize your wallet configuration."""
+        if stm.is_wallet():
+            print("Your wallet is already initialized.")
+        else:
+            self.do_create_wallet()
+            self.do_unlock()
+            if stm.unlocked():
+                self.do_addkey()
+                print("Your wallet is initialized!")
+            else:
+                print("Failed to unlock wallet.")
 
     def do_update_witness(self, line):
         """Update witness."""
@@ -64,6 +88,45 @@ class PyWallet(Cmd):
             else:
                 print("Updates discarded.")
                 conf.check_config(conf.d['owner'])
+
+    def do_addkey(self, line=''):
+        """Add a private key."""
+        k = click.prompt("Please enter the private key: ", type=str)
+        if stm.add_key(k):
+            print("Your key has been added.")
+
+    def do_unlock(self, line=''):
+        """Unlock your wallet."""
+        if stm.is_wallet():
+            p = getpass.getpass("Enter your BIP38 passphrase: ")
+            if stm.unlock_wallet(p):
+                print("Wallet is unlocked.")
+                self.prompt = ">>> "
+            else:
+                print("Unable to unlock wallet.")
+        else:
+            print("No active wallet.")
+
+    def do_lock(self, line=''):
+        """Lock your wallet."""
+        if stm.is_wallet():
+            stm.lock_wallet()
+        else:
+            print("There is no active wallet.")
+
+    def do_create_wallet(self, line=''):
+        """Create a new wallet."""
+        if stm.is_wallet():
+            print("A wallet already exists. Please unlock or delete and create a new one.")
+        else:
+            p = getpass.getpass("Please enter your new BIP38 passphrase: ")
+            stm.create_wallet(p)
+
+    def do_delete_wallet(self, line=''):
+        """Delete your wallet."""
+        ans = click.confirm("Would you really like to delete your wallet?", default=False)
+        if ans:
+            stm.delete_wallet()
 
     def do_rc(self, name):
         while True:

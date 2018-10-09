@@ -1,4 +1,3 @@
-import getpass
 from beem import Steem
 from beem.account import Account
 from beem.amount import Amount
@@ -10,6 +9,9 @@ from beem.witness import (
     Witnesses,
     WitnessesObject,
 )
+from beem.wallet import (
+    NoWalletException,
+)
 from beem.transactionbuilder import TransactionBuilder
 from beembase.operations import Comment
 from .config import Configuration
@@ -19,12 +21,9 @@ from sys import getsizeof
 class SteemExplorer():
     DISABLE_KEY = 'STM1111111111111111111111111111111114T1Anm'
 
-    def __init__(self, con: Configuration, nobroadcast=True, wif=''):
+    def __init__(self, con: Configuration, nobroadcast=True):
         self.conf = con
-        if wif:
-            self.stm = Steem(nobroadcast=nobroadcast, keys={'active': wif})
-        else:
-            self.stm = Steem(nobroadcast=nobroadcast)
+        self.stm = Steem(nobroadcast=nobroadcast)
 
     def compute_cost(self, type=1, tx_size=1000, perm_len=10, pperm_len=0):
         rc = RC()
@@ -33,6 +32,54 @@ class SteemExplorer():
             print("RC costs for a comment: %.2f G RC" % (cost))
         else:
             print("wtf")
+
+    def is_wallet(self):
+        return self.stm.wallet.created()
+
+    def unlocked(self):
+        return self.stm.wallet.unlocked()
+
+    def unlock_wallet(self, p):
+        if p:
+            self.stm.wallet.unlock(p)
+            return True
+        else:
+            print("Need passphrase to unlock wallet.")
+            return False
+
+    def lock_wallet(self):
+        self.stm.wallet.lock()
+
+    def check_wallet(self):
+        if self.stm.wallet.MasterPassword.config_key:
+            print("Master password exists.")
+
+    def create_wallet(self, p):
+        if p:
+            self.stm.wallet.create(p)
+            return True
+        else:
+            print("Please enter a passphrase to create wallet.")
+            return False
+
+    def add_key(self, key):
+        if key:
+            if self.is_wallet():
+                if self.unlocked():
+                    self.stm.wallet.addPrivateKey(key)
+                    return True
+                else:
+                    print("Please unlock wallet.")
+                    return False
+            else:
+                print("There is no active wallet.")
+                return False
+        else:
+            print("Please enter a key.")
+            return False
+
+    def delete_wallet(self):
+        self.stm.wallet.wipe(True)
 
     def get_rc(self, account_name):
         acc = Account(account_name)
@@ -54,7 +101,7 @@ class SteemExplorer():
             return False
         self.conf.print_json(w.json())
 
-    def disable_witness(self, conf: dict):
+    def disable_witness(self):
         print(DISABLE_KEY)
 
     def witlist(self):
@@ -65,15 +112,13 @@ class SteemExplorer():
         com = dict()
         com = {
             'parent_author': '',
-            'parent_permlink': 'chiefs',
-            'author': 'petertag',
-            'permlink': 'second-update-october-2-jjq9xmvk',
-            'title': 'Second Update- October 2',
-            'body': 'Not too much to say on the second day of October, especially since my RC is still low due to some live testing I did. I still want to be active, so I\'m just dealing with it.\nSome of these posts in this month of daily posting are going to be missing out on content because it\'s hard to create that much in one space. But that doesn\'t matter, because sports happen weekly!### Chiefs vs. Broncos\nNow I\'m from Kansas City, and live in Denver, so this was quite the game. I also happen to have Patrick Mahomes, Kareem Hunt, and Travis Kelce on my fantasy team, so it was a big game for my fantasy as well (I won, 171.4-134.5 for those keeping score at home). Mahomes missed out on some plays because he was looking out for Von Miller, but Hunt picked up the slack for the Chiefs.\n### That\'s it\nI don\'t actually follow sports too much so that\'s my only opinion on them this week. I\'m working on a python wallet and witness tool for steem, using @Holger80\'s beem python pr',
+            'parent_permlink': 'steem',
+            'author': 'me',
+            'permlink': 'testpost',
+            'title': 'testpost pls ignore',
+            'body': 'do not upvote',
             'json_metadata': {
-                'tags': ('chiefs', 'steem', 'python', 'photography', 'partiko'),
-                'image': 'https://s3.us-east-2.amazonaws.com/partiko.io/img/6f5db17aa3252ce18fcce43f0e37677ce21370e3.png',
-                'app': 'partiko'
+                'tags': ('test', 'post', 'pls', 'ignore', 'steem'),
             }
         }
         print(len(com['body']))
