@@ -2,7 +2,7 @@ from setuptools import find_packages
 from setuptools import setup
 
 setup(
-    name='pywallet',
+    name='pywit',
     version='0.1.0',
     description='Steem Python Witness Toolkit',
     packages=find_packages(),
@@ -19,6 +19,6 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'pywallet=pywitness.cli:run_loop',
+            'pywit=pywitness.cli:run_loop',
         ]
     })

@@ -30,6 +30,10 @@ class PyWallet(Cmd):
             self.prompt = "Locked >>> "
         return None
 
+    def postloop(self):
+        stm.lock_wallet()
+        print("Pywit closing now.")
+
     def do_init(self, name=''):
         """Run: 'init [witness_name]' or 'init'
         Initialize your witness configuration."""
@@ -55,7 +59,7 @@ class PyWallet(Cmd):
         #ask them if they want to enable witness
 
     def do_new_wallet(self, line=''):
-        """Run: 'new_wallet'
+        """Usage: 'new_wallet'
         Initialize your wallet configuration."""
         if stm.is_wallet():
             print("Your wallet is already initialized.")
@@ -89,17 +93,21 @@ class PyWallet(Cmd):
                 print("Updates discarded.")
                 conf.check_config(conf.d['owner'])
 
-    def do_addkey(self, line=''):
-        """Add a private key."""
-        k = click.prompt("Please enter the private key: ", type=str)
-        if stm.add_key(k):
-            print("Your key has been added.")
+    def do_addkey(self, key=''):
+        """Usage: 'addkey' or 'addkey KEY'
+        Add a private key."""
+        if k:
+            if stm.add_key(k):
+                print("Your key has been added.")
+        else:
+            k = click.prompt("Please enter the private key: ", type=str)
+            if stm.add_key(k):
+                print("Your key has been added.")
 
     def do_unlock(self, line=''):
         """Unlock your wallet."""
         if stm.is_wallet():
-            p = getpass.getpass("Enter your BIP38 passphrase: ")
-            if stm.unlock_wallet(p):
+            if stm.unlock_wallet():
                 print("Wallet is unlocked.")
                 self.prompt = ">>> "
             else:
@@ -119,21 +127,13 @@ class PyWallet(Cmd):
         if stm.is_wallet():
             print("A wallet already exists. Please unlock or delete and create a new one.")
         else:
-            p = getpass.getpass("Please enter your new BIP38 passphrase: ")
-            stm.create_wallet(p)
+            stm.create_wallet()
 
     def do_delete_wallet(self, line=''):
         """Delete your wallet."""
         ans = click.confirm("Would you really like to delete your wallet?", default=False)
         if ans:
             stm.delete_wallet()
-
-    def do_rc(self, name):
-        while True:
-            stm.get_rc(name)
-
-    def postloop(self):
-        print
 
     def do_test(self, line):
         print("Testing")
@@ -143,7 +143,8 @@ class PyWallet(Cmd):
         return True
 
     def do_enable(self, pub_key):
-        """Enable witness."""
+        """Usage 'enable PUBLIC_KEY'
+        Enable witness."""
         conf.check_config(conf.d['owner'])
         stm.update(pub_key)
         #call an interface method
@@ -154,7 +155,8 @@ class PyWallet(Cmd):
         stm.update()
 
     def do_get_witness(self, name):
-        """Get witness details."""
+        """Usage: 'get_witness NAME'
+        Get witness details."""
         pprint(stm.witness(name))
 
     def do_status(self, line):
@@ -163,19 +165,19 @@ class PyWallet(Cmd):
         stm.print_witness(conf.d['owner'])
 
     def do_feed(self, line):
-        """Price Feed."""
+        """Uninimplemented Price Feed."""
 
     def do_publish_feed(self, line):
-        """Publish price feed."""
+        """Uninimplemented Publish price feed."""
 
     def do_keygen(self, line):
-        """Generate new key."""
+        """Uninimplemented Generate new key."""
 
     def do_tickers(self, line):
-        """Price tickers."""
+        """Uninimplemented Price tickers."""
 
     def do_monitor(self, line):
-        """Monitor witness."""
+        """Uninimplemented Monitor witness."""
         conf = check_conf()
         interface.monitor(conf['owner'])
 
@@ -184,7 +186,7 @@ class PyWallet(Cmd):
         interface.witlist()
 
     def do_txcost(self, line):
-        """Calculates cost of a transaction."""
+        """Uninimplemented Calculates cost of a transaction."""
         type = click.prompt("What type of transaction? Comment 1, Vote 2, Transfer 3, Custom 4", type=int)
         sz = click.prompt("What size transaction? [Bytes]", type=int)
         plen = click.prompt("What is the length of the permlink? [Characters]", type=int)
@@ -192,7 +194,8 @@ class PyWallet(Cmd):
         stm.compute_cost(type=type, tx_size=sz, perm_len=plen, pperm_len=pplen)
 
     def do_delete_witness(self, name):
-        """Deletes witness configuration file."""
+        """Usage: 'delete_witness NAME'
+        Deletes witness configuration file."""
         conf.read_config()
         if conf.d['owner'] == name:
             conf.delete_config()

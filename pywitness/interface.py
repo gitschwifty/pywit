@@ -17,6 +17,7 @@ from beembase.operations import Comment
 from .config import Configuration
 from pprint import pprint
 from sys import getsizeof
+import getpass
 
 class SteemExplorer():
     DISABLE_KEY = 'STM1111111111111111111111111111111114T1Anm'
@@ -39,7 +40,8 @@ class SteemExplorer():
     def unlocked(self):
         return self.stm.wallet.unlocked()
 
-    def unlock_wallet(self, p):
+    def unlock_wallet(self):
+        p = getpass.getpass("Enter your BIP38 passphrase: ")
         if p:
             self.stm.wallet.unlock(p)
             return True
@@ -54,7 +56,8 @@ class SteemExplorer():
         if self.stm.wallet.MasterPassword.config_key:
             print("Master password exists.")
 
-    def create_wallet(self, p):
+    def create_wallet(self):
+        p = getpass.getpass("Enter your new BIP38 passphrase: ")
         if p:
             self.stm.wallet.create(p)
             return True
