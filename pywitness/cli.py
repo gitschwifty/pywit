@@ -6,7 +6,7 @@ from pprint import pprint
 from cmd2 import Cmd
 
 conf = Configuration()
-stm = SteemExplorer(con=conf)
+stm = SteemExplorer(con=conf, nobroadcast=False)
 
 class PyWallet(Cmd):
     """Python Steem Wallet Interface using Beem."""
@@ -76,9 +76,6 @@ class PyWallet(Cmd):
                       default=True)
         if ans:
             conf.check_config(conf.d['owner'])
-
-            key = click.prompt("What is your public signing key?", type=str)
-
             conf.ask_config(conf.d['owner'])
 
             ## show them all pretty like
@@ -86,7 +83,7 @@ class PyWallet(Cmd):
             ans = click.confirm("Would you like to confirm these updates?", default=True)
             if(ans):
                 conf.write_config()
-                stm.update(pub_key=key)
+                stm.update(enable=True)
             else:
                 print("Updates discarded.")
                 conf.check_config(conf.d['owner'])
@@ -199,7 +196,7 @@ class PyWallet(Cmd):
         if not key:
             print("Please provide a key.")
             return
-        conf.d['pub_key'] = key
+        conf.set_pub_key(key)
         if not stm.check_key(name=conf.d['owner'], key=key):
             ans = click.confirm("Your signing key is not the same as this one. Would you like to enable this key?", default=True)
             if ans:
@@ -219,19 +216,17 @@ class PyWallet(Cmd):
 
     def do_monitor(self, line=''):
         """Uninimplemented Monitor witness."""
-        conf = check_conf()
-        interface.monitor(conf['owner'])
 
 def enable():
-    p = PyWallet()
-    p.do_status()
-
-def status():
     p = PyWallet()
     if conf.d['pub_key']:
         p.do_enable(pub_key=conf.d['pub_key'])
     else:
         print("Must have a set public key to enable. Run 'add_pubkey KEY' in Pywit.")
+
+def status():
+    p = PyWallet()
+    p.do_status()
 
 def run_loop():
     p = PyWallet()

@@ -59,7 +59,7 @@ class Configuration():
         return True
 
     def ask_config(self, name):
-        self.d['url'] = click.prompt("What is your witness URL?", type=str)
+        self.d['url'] = click.prompt("What is your witness URL?", type=str, default=self.d['url'])
         default_fee = self.get_float_amount(self.d['props']['account_creation_fee'])
         creation_fee = click.prompt(
                         "What should the account creation fee be (STEEM)?",
@@ -87,10 +87,15 @@ class Configuration():
                                 "What should the SBD interest rate be?",
                                 default=self.d['props']['sbd_interest_rate'])
 
+        self.d['pub_key'] = click.prompt("What is your public signing key?",
+                                type=str,
+                                default=self.d['pub_key'])
+
         #maximum_block_size not included because you shouldn't change that
 
     def set_pub_key(self, key):
         self.d['pub_key'] = key
+        self.write_config()
 
     def get_amount_json(self, str):
         return Amount(str).json()

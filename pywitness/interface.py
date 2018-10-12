@@ -12,6 +12,7 @@ from beem.witness import (
 from beem.wallet import (
     NoWalletException,
 )
+from beem.instance import set_shared_steem_instance
 from beem.transactionbuilder import TransactionBuilder
 from beembase.operations import Comment
 from .config import Configuration
@@ -25,6 +26,7 @@ class SteemExplorer():
     def __init__(self, con: Configuration, nobroadcast=True):
         self.conf = con
         self.stm = Steem(nobroadcast=nobroadcast)
+        set_shared_steem_instance(self.stm)
 
     def compute_cost(self, type=1, tx_size=1000, perm_len=10, pperm_len=0):
         rc = RC()
@@ -153,13 +155,15 @@ class SteemExplorer():
         broadcast_tx = tx.broadcast()
         pprint(broadcast_tx)
 
-    def update(self, pub_key):
+    def update(self, enable=True):
+        if self.stm.wallet.locked():
+            self.unlock_wallet()
         w = Witness(self.conf.d['owner'])
         w['props']['sbd_interest_rate'] = "%s SBD" % w['props']['sbd_interest_rate']
-        if pub_key:
-            w.update(pub_key, w['url'], w['props'], account=self.conf.d['owner'])
+        if enable:
+            w.update(self.conf.d['pub_key'], self.conf.d['url'], self.conf.d['props'], account=self.conf.d['owner'])
         else:
-            w.update(DISABLE_KEY, w['url'], w['props'], account=self.conf.d['owner'])
+            w.update(DISABLE_KEY, self.conf.d['url'], self.conf.d['props'], account=self.conf.d['owner'])
 
     def monitor(self, name):
         w = Witness(name)
