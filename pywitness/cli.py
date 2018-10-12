@@ -13,11 +13,9 @@ class PyWallet(Cmd):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.register_preloop_hook(self.prehook)
 
-    def prehook(self) -> None:
+    def preloop(self) -> None:
         self.poutput("Python Steem Wallet Interface")
-        stm.check_wallet()
         if not conf.is_config():
             self.prompt = ">>> "
             print("Initializing your witness.")
@@ -72,7 +70,7 @@ class PyWallet(Cmd):
             else:
                 print("Failed to unlock wallet.")
 
-    def do_update_witness(self, line):
+    def do_update_witness(self, line=''):
         """Update witness."""
         ans = click.confirm("Would you like to update %s's witness profile?" % conf.d['owner'],
                       default=True)
@@ -135,67 +133,59 @@ class PyWallet(Cmd):
         if ans:
             stm.delete_wallet()
 
-    def do_test(self, line):
+    def do_test(self, line=''):
         print("Testing")
 
-    def do_exit(self, line):
+    def do_exit(self, line=''):
         """Exit the wallet."""
         return True
 
     def do_enable(self, pub_key):
         """Usage 'enable PUBLIC_KEY'
         Enable witness."""
+        if not pub_key:
+            print("Please provide public key.")
+            return
         conf.check_config(conf.d['owner'])
         stm.update(pub_key)
         #call an interface method
 
-    def do_disable(self, line):
+    def do_disable(self, line=''):
         """Disable witness."""
         conf.check_config(conf.d['owner'])
         stm.update()
 
-    def do_get_witness(self, name):
+    def do_get_witness(self, name=''):
         """Usage: 'get_witness NAME'
         Get witness details."""
         pprint(stm.witness(name))
 
-    def do_status(self, line):
+    def do_status(self, line=''):
         """Your Witness Status."""
         conf.check_config(conf.d['owner'])
         stm.print_witness(conf.d['owner'])
 
-    def do_feed(self, line):
-        """Uninimplemented Price Feed."""
-
-    def do_publish_feed(self, line):
-        """Uninimplemented Publish price feed."""
-
-    def do_keygen(self, line):
-        """Uninimplemented Generate new key."""
-
-    def do_tickers(self, line):
-        """Uninimplemented Price tickers."""
-
-    def do_monitor(self, line):
-        """Uninimplemented Monitor witness."""
-        conf = check_conf()
-        interface.monitor(conf['owner'])
-
-    def do_list_witness(self, line):
+    def do_list_witness(self, line=''):
         """Returns data for all witnesses."""
         interface.witlist()
 
-    def do_txcost(self, line):
-        """Uninimplemented Calculates cost of a transaction."""
-        type = click.prompt("What type of transaction? Comment 1, Vote 2, Transfer 3, Custom 4", type=int)
+    def do_txcost(self, line=''):
+        """Calculates cost of a transaction."""
+        type = click.prompt("What type of transaction? Comment 1, Vote 2, Transfer 3, Custom Json 4", type=int)
         sz = click.prompt("What size transaction? [Bytes]", type=int)
-        plen = click.prompt("What is the length of the permlink? [Characters]", type=int)
-        pplen = click.prompt("What is the length of the parent permlink? [Characters]", type=int)
+        if type == 1:
+            plen = click.prompt("What is the length of the permlink? [Characters]", type=int)
+            pplen = click.prompt("What is the length of the parent permlink? [Characters]", type=int)
+        if type == 3:
+            plen = click.prompt("How many market operations?", type=int)
         stm.compute_cost(type=type, tx_size=sz, perm_len=plen, pperm_len=pplen)
 
     def do_delete_witness(self, name):
         """Usage: 'delete_witness NAME'
         Deletes witness configuration file."""
+        if not name:
+            print("Please provide name to delete.")
+            return
         conf.read_config()
         if conf.d['owner'] == name:
             conf.delete_config()
@@ -203,8 +193,46 @@ class PyWallet(Cmd):
         else:
             print("%s's profile is not available." % name)
 
-def run_loop():
-    PyWallet().cmdloop()
+    def do_add_pubkey(self, key):
+        """Usage: 'add_pubkey KEY'
+        Adds public signing key to configuration file for monitoring and quick enabling"""
+        if not key:
+            print("Please provide a key.")
+            return
+        conf.d['pub_key'] = key
+        if not stm.check_key(name=conf.d['owner'], key=key):
+            ans = click.confirm("Your signing key is not the same as this one. Would you like to enable this key?", default=True)
+            if ans:
+                self.do_enable(pub_key=key)
 
-if __name__ == '__main__':
-    PyWallet().cmdloop()
+    def do_feed(self, line=''):
+        """Uninimplemented Price Feed."""
+
+    def do_publish_feed(self, line=''):
+        """Uninimplemented Publish price feed."""
+
+    def do_keygen(self, line=''):
+        """Uninimplemented Generate new key."""
+
+    def do_tickers(self, line=''):
+        """Uninimplemented Price tickers."""
+
+    def do_monitor(self, line=''):
+        """Uninimplemented Monitor witness."""
+        conf = check_conf()
+        interface.monitor(conf['owner'])
+
+def enable():
+    p = PyWallet()
+    p.do_status()
+
+def status():
+    p = PyWallet()
+    if conf.d['pub_key']:
+        p.do_enable(pub_key=conf.d['pub_key'])
+    else:
+        print("Must have a set public key to enable. Run 'add_pubkey KEY' in Pywit.")
+
+def run_loop():
+    p = PyWallet()
+    p.cmdloop()

@@ -19,6 +19,7 @@ class Configuration():
             self.d = {
                 'owner': '',
                 'url': 'https://www.steemd.com/witnesses',
+                'pub_key': '',
                 'props': {  'account_creation_fee': {'amount': '3000',
                                                      'nai': '@@000000021',
                                                      'precision': 3},
@@ -26,7 +27,7 @@ class Configuration():
                             'account_subsidy_decay': 347321,
                             'maximum_block_size': 65536,
                             'sbd_interest_rate': 0,
-            }}
+                        }}
 
     def read_config(self):
         with open(self.file, 'r') as f:
@@ -87,6 +88,9 @@ class Configuration():
                                 default=self.d['props']['sbd_interest_rate'])
 
         #maximum_block_size not included because you shouldn't change that
+
+    def set_pub_key(self, key):
+        self.d['pub_key'] = key
 
     def get_amount_json(self, str):
         return Amount(str).json()

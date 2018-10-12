@@ -4,7 +4,7 @@ from setuptools import setup
 
 setup(
     name='pywit',
-    version='0.1.0',
+    version='0.2.0',
     description='Steem Python Witness Toolkit',
     packages=find_packages(),
     setup_requires=['pytest-runner'],
@@ -21,5 +21,7 @@ setup(
     entry_points={
         'console_scripts': [
             'pywit=pywitness.cli:run_loop',
+            'pywit_enable=pywitness.cli:enable',
+            'pywit_status=pywitness.cli:status'
         ]
     })

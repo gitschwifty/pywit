@@ -30,9 +30,16 @@ class SteemExplorer():
         rc = RC()
         if type == 1:
             cost = rc.comment(tx_size=tx_size, permlink_length=perm_len, parent_permlink_length=pperm_len)
-            print("RC costs for a comment: %.2f G RC" % (cost))
+        elif type == 2:
+            cost = rc.vote(tx_size=tx_size)
+        elif type == 3:
+            cost = rc.transfer(tx_size=tx_size, market_op_count=perm_len)
+        elif type == 4:
+            cost = rc.custom_json(tx_size=tx_size)
         else:
-            print("wtf")
+            print("Invalid type.")
+            return
+        print("RC costs for a comment: %.2f G RC" % (cost))
 
     def is_wallet(self):
         return self.stm.wallet.created()
@@ -104,8 +111,17 @@ class SteemExplorer():
             return False
         self.conf.print_json(w.json())
 
+    def check_key(self, name, key):
+        try:
+            w = Witness(name)
+        except WitnessDoesNotExistsException:
+            return False
+        if key == w['signing_key']:
+            return True
+        return False
+
     def disable_witness(self):
-        print(DISABLE_KEY)
+        self.update()
 
     def witlist(self):
         w = Witnesses()
