@@ -159,7 +159,6 @@ class SteemExplorer():
         if self.stm.wallet.locked():
             self.unlock_wallet()
         w = Witness(self.conf.d['owner'])
-        w['props']['sbd_interest_rate'] = "%s SBD" % w['props']['sbd_interest_rate']
         if enable:
             w.update(self.conf.d['pub_key'], self.conf.d['url'], self.conf.d['props'], account=self.conf.d['owner'])
         else:

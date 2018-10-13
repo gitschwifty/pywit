@@ -144,13 +144,13 @@ class PyWallet(Cmd):
             print("Please provide public key.")
             return
         conf.check_config(conf.d['owner'])
-        stm.update(pub_key)
+        stm.update()
         #call an interface method
 
     def do_disable(self, line=''):
         """Disable witness."""
         conf.check_config(conf.d['owner'])
-        stm.update()
+        stm.update(enable=False)
 
     def do_get_witness(self, name=''):
         """Usage: 'get_witness NAME'
@@ -227,6 +227,10 @@ def enable():
 def status():
     p = PyWallet()
     p.do_status()
+
+def disable():
+    p = PyWallet()
+    p.do_disable()
 
 def run_loop():
     p = PyWallet()

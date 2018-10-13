@@ -22,6 +22,7 @@ setup(
         'console_scripts': [
             'pywit=pywitness.cli:run_loop',
             'pywit_enable=pywitness.cli:enable',
-            'pywit_status=pywitness.cli:status'
+            'pywit_status=pywitness.cli:status',
+            'pywit_disable=pywitness.cli:disable',
         ]
     })
