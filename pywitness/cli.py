@@ -6,7 +6,7 @@ from pprint import pprint
 from cmd2 import Cmd
 
 conf = Configuration()
-stm = SteemExplorer(con=conf)
+stm = SteemExplorer(con=conf, nobroadcast=False)
 
 class PyWallet(Cmd):
     """Python Steem Wallet Interface using Beem."""
