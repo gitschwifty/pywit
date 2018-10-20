@@ -4,7 +4,7 @@ from setuptools import setup
 
 setup(
     name='pywit',
-    version='0.2.0',
+    version='0.2.1',
     description='Steem Python Witness Toolkit',
     packages=find_packages(),
     setup_requires=['pytest-runner'],
