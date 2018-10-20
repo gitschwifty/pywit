@@ -155,7 +155,7 @@ class PyWallet(Cmd):
     def do_get_witness(self, name=''):
         """Usage: 'get_witness NAME'
         Get witness details."""
-        pprint(stm.witness(name))
+        stm.print_witness(name)
 
     def do_status(self, line=''):
         """Your Witness Status."""
