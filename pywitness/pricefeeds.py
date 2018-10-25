@@ -246,11 +246,11 @@ class PriceFeed():
         self.log.pop_func()
         return perc
 
-    def do_feed(self):
+    def do_feed(self, pnow):
         self.log.add_func("PriceFeed:do_feed")
         p = self.get_pair("SU")
         per = self.get_percent_difference(self.last_price, p)
-        if per > self.min_spread or self.pub_today == 24:
+        if per > self.min_spread or self.pub_today == 24 or pnow:
             if per < 25 and self.last_price != 0:
                 self.stm.pubfeed(p)
                 self.last_price = p
@@ -266,7 +266,7 @@ class PriceFeed():
             self.pub_today += 1
         self.log.pop_func()
 
-    def run_feeds(self, slptime=6000, spread=2.0):
+    def run_feeds(self, slptime=6000, spread=2.0, pnow=False):
         self.log.add_func("PriceFeed:run_feeds")
         if self.stm.locked():
             if not self.stm.unlock_wallet():
@@ -279,7 +279,9 @@ class PriceFeed():
         self.log.log(logstr, 1)
         while True:
             try:
-                self.do_feed()
+                self.do_feed(pnow)
+                if pnow:
+                    pnow = False
                 time.sleep(slptime)
             except KeyboardInterrupt:
                 self.log.pop_func()

@@ -117,13 +117,21 @@ class SteemExplorer():
             return False
         return w.json()
 
-    def print_witness(self, name):
-        try:
-            w = Witness(name)
-        except WitnessDoesNotExistsException:
-            self.log.log("Witness does not exist.", 2)
-            return False
-        self.conf.print_json(w.json())
+    def print_witness(self, name=''):
+        if name:
+            try:
+                w = Witness(name)
+            except WitnessDoesNotExistsException:
+                self.log.log("Witness does not exist.", 2)
+                return False
+            self.conf.print_json(w.json())
+        else:
+            try:
+                w = Witness(self.conf.d['owner'])
+            except WitnessDoesNotExistsException:
+                self.log.log("Witness does not exist.", 2)
+                return False
+            self.conf.print_json(w.json())
 
     def check_key(self, name, key):
         try:
@@ -168,13 +176,17 @@ class SteemExplorer():
         broadcast_tx = tx.broadcast()
         pprint(broadcast_tx)
 
-    def update(self, enable=True):
+    def update(self, enable=True, key=''):
         if self.stm.wallet.locked():
             self.unlock_wallet()
         w = Witness(self.conf.d['owner'])
         if enable:
-            if w.update(self.conf.d['pub_key'], self.conf.d['url'], self.conf.d['props'], account=self.conf.d['owner']):
-                self.log.log("Witness updated with new parameters.", 2)
+            if key:
+                if w.update(key, self.conf.d['url'], self.conf.d['props'], account=self.conf.d['owner']):
+                    self.log.log("Witness updated with new parameters.", 2)
+            else:
+                if w.update(self.conf.d['pub_key'], self.conf.d['url'], self.conf.d['props'], account=self.conf.d['owner']):
+                    self.log.log("Witness updated with new parameters.", 2)
         else:
             if w.update(DISABLE_KEY, self.conf.d['url'], self.conf.d['props'], account=self.conf.d['owner']):
                 self.log.log("Witness disabled.", 1)

@@ -60,7 +60,7 @@ class WitnessMonitor():
     def kill_witness(self, session_missed):
         self.log.add_func("WitnessMonitor:kill_witness")
         if self.b:
-            self.stm.change_key(self.b)
+            self.stm.update(key=self.b)
             logstr = "Switching to backup key, {} blocks have been missed this session.".format(session_missed)
             self.log.log(logstr, 0)
             #notify you somehow?
