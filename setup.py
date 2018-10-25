@@ -17,6 +17,7 @@ setup(
         'prettytable',
         'beem',
         'gnureadline',
+        'cmd2',
     ],
     entry_points={
         'console_scripts': [

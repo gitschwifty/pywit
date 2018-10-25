@@ -22,3 +22,4 @@ requests==2.20.0
 gnureadline==6.3.8
 beem==0.20.9
 prettytable
+cmd2
