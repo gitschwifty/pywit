@@ -112,8 +112,8 @@ class PyWallet(cmd2.Cmd):
     def do_addkey(self, key=''):
         """Usage: 'addkey' or 'addkey KEY'
         Add a private key."""
-        if k:
-            if self.stm.add_key(k):
+        if key:
+            if self.stm.add_key(key):
                 print("Your key has been added.")
         else:
             k = click.prompt("Please enter the private key: ", type=str)
