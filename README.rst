@@ -2,11 +2,14 @@ pywit
 ********
 pywit is a command line tool for steem, which is built using beem from holgern (holger80 on steem), and based off a similar tool built on steempy, conductor, built by Netherdrake.
 
-Current Status
+Current Build Status
 ------------------
 Version 1.0.0 has been released! This contains all of the features I originally intended to include in pywit.
 
 As of right now, this has only been verifiably tested with Python 3.6.x. More will come, but it should run on anything above 3.4.x.
+
+.. image:: https://circleci.com/gh/gitschwifty/pywit/tree/master.svg?style=svg
+    :target: https://circleci.com/gh/gitschwifty/pywit/tree/master
 
 Dependencies
 -------------------
