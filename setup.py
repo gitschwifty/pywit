@@ -20,6 +20,6 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'pywit=pywitness.cli:pywit',
+            'pywit=pywit.cli:pywit',
         ]
     })
