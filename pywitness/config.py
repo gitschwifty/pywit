@@ -18,7 +18,7 @@ class Configuration():
         else:
             self.d = {
                 'owner': '',
-                'url': 'https://www.steemd.com/witnesses',
+                'url': '',
                 'pub_key': '',
                 'props': {  'account_creation_fee': {'amount': '3000',
                                                      'nai': '@@000000021',

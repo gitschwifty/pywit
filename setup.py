@@ -1,10 +1,9 @@
-# coding=utf-8
 from setuptools import find_packages
 from setuptools import setup
 
 setup(
     name='pywit',
-    version='0.2.1',
+    version='1.0.0',
     description='Steem Python Witness Toolkit',
     packages=find_packages(),
     setup_requires=['pytest-runner'],
@@ -17,12 +16,10 @@ setup(
         'requests',
         'prettytable',
         'beem',
+        'gnureadline',
     ],
     entry_points={
         'console_scripts': [
-            'pywit=pywitness.cli:run_loop',
-            'pywit_enable=pywitness.cli:enable',
-            'pywit_status=pywitness.cli:status',
-            'pywit_disable=pywitness.cli:disable',
+            'pywit=pywitness.cli:pywit',
         ]
     })
