@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name='pywit',
-    version='1.0.0',
+    version='1.0.2',
     description='Steem Python Witness Toolkit',
     packages=find_packages(),
     setup_requires=['pytest-runner'],
