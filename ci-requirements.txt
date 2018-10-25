@@ -17,8 +17,8 @@ codacy-coverage
 virtualenv
 codecov
 Click==7.0
-click-spinner=0.1.8
-requests=2.20.0
-gnureadline=6.3.8
-beem=0.20.9
+click-spinner==0.1.8
+requests==2.20.0
+gnureadline==6.3.8
+beem==0.20.9
 prettytable
