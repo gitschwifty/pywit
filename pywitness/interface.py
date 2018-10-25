@@ -12,19 +12,26 @@ from beem.witness import (
 from beem.wallet import (
     NoWalletException,
 )
+from beemgraphenebase.account import BrainKey
 from beem.instance import set_shared_steem_instance
 from beem.transactionbuilder import TransactionBuilder
 from beembase.operations import Comment
 from .config import Configuration
+from .logger import Logger
 from pprint import pprint
 from sys import getsizeof
 import getpass
 
-class SteemExplorer():
-    DISABLE_KEY = 'STM1111111111111111111111111111111114T1Anm'
+DISABLE_KEY = 'STM1111111111111111111111111111111114T1Anm'
 
-    def __init__(self, con: Configuration, nobroadcast=True):
+class SteemExplorer():
+    def __init__(self, con: Configuration, log: Logger, nobroadcast=True):
         self.conf = con
+        self.stm = Steem(nobroadcast=nobroadcast)
+        self.log = log
+        set_shared_steem_instance(self.stm)
+
+    def change_broadcast(self, nobroadcast):
         self.stm = Steem(nobroadcast=nobroadcast)
         set_shared_steem_instance(self.stm)
 
@@ -48,6 +55,9 @@ class SteemExplorer():
 
     def unlocked(self):
         return self.stm.wallet.unlocked()
+
+    def locked(self):
+        return not self.stm.wallet.unlocked()
 
     def unlock_wallet(self):
         p = getpass.getpass("Enter your BIP38 passphrase: ")
@@ -103,27 +113,38 @@ class SteemExplorer():
         try:
             w = Witness(name)
         except WitnessDoesNotExistsException:
+            self.log.log("Witness does not exist.", 2)
             return False
         return w.json()
 
-    def print_witness(self, name):
-        try:
-            w = Witness(name)
-        except WitnessDoesNotExistsException:
-            return False
-        self.conf.print_json(w.json())
+    def print_witness(self, name=''):
+        if name:
+            try:
+                w = Witness(name)
+            except WitnessDoesNotExistsException:
+                self.log.log("Witness does not exist.", 2)
+                return False
+            self.conf.print_json(w.json())
+        else:
+            try:
+                w = Witness(self.conf.d['owner'])
+            except WitnessDoesNotExistsException:
+                self.log.log("Witness does not exist.", 2)
+                return False
+            self.conf.print_json(w.json())
 
     def check_key(self, name, key):
         try:
             w = Witness(name)
         except WitnessDoesNotExistsException:
+            self.log.log("Witness does not exist.", 2)
             return False
         if key == w['signing_key']:
             return True
         return False
 
     def disable_witness(self):
-        self.update()
+        self.update(enable=False)
 
     def witlist(self):
         w = Witnesses()
@@ -155,15 +176,60 @@ class SteemExplorer():
         broadcast_tx = tx.broadcast()
         pprint(broadcast_tx)
 
-    def update(self, enable=True):
+    def update(self, enable=True, key=''):
         if self.stm.wallet.locked():
             self.unlock_wallet()
         w = Witness(self.conf.d['owner'])
         if enable:
-            w.update(self.conf.d['pub_key'], self.conf.d['url'], self.conf.d['props'], account=self.conf.d['owner'])
+            if key:
+                if w.update(key, self.conf.d['url'], self.conf.d['props'], account=self.conf.d['owner']):
+                    self.log.log("Witness updated with new parameters.", 2)
+            else:
+                if w.update(self.conf.d['pub_key'], self.conf.d['url'], self.conf.d['props'], account=self.conf.d['owner']):
+                    self.log.log("Witness updated with new parameters.", 2)
         else:
-            w.update(DISABLE_KEY, self.conf.d['url'], self.conf.d['props'], account=self.conf.d['owner'])
+            if w.update(DISABLE_KEY, self.conf.d['url'], self.conf.d['props'], account=self.conf.d['owner']):
+                self.log.log("Witness disabled.", 1)
 
-    def monitor(self, name):
-        w = Witness(name)
-        w.refresh()
+
+    def change_key(self, pub_key):
+        if self.stm.wallet.locked():
+            self.unlock_wallet()
+        w = Witness(self.conf.d['owner'])
+        if w.update(pub_key, self.conf.d['url'], self.conf.d['props'], account=self.conf.d['owner']):
+            logstr = "Witness public key updated to {}.".format(pub_key)
+            self.log.log(logstr, 1)
+
+    def pubfeed(self, price):
+        if self.locked():
+            self.unlock_wallet()
+        w = Witness(self.conf.d['owner'])
+        if w.feed_publish(base=price, quote="1.000 STEEM"):
+            logstr = "Feed published: {:.3f} SBD/STEEM".format(price)
+            self.log.log(logstr, 1)
+
+    def get_price_feed(self):
+        w = Witness(self.conf.d['owner'])
+        p = Amount(w.json()['sbd_exchange_rate']['base']).amount
+        return p
+
+    def get_missed(self):
+        w = Witness(self.conf.d['owner'])
+        m = w.json()['total_missed']
+        return m
+
+    def keygen(self, brain='', seq=0):
+        bk = BrainKey(brainkey=brain, sequence=seq)
+        b = dict()
+        b['brainkey'] = bk.get_brainkey()
+        b['privkey'] = bk.get_private()
+        b['pubkey'] = bk.get_public_key()
+        return b
+
+    def suggest_brain(self):
+        bk = BrainKey()
+        b = dict()
+        b['brainkey'] = bk.get_brainkey()
+        b['privkey'] = bk.get_private()
+        b['pubkey'] = bk.get_public_key()
+        return b
