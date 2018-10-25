@@ -273,14 +273,14 @@ class PyWallet(cmd2.Cmd):
         """Runs a witness price feed."""
         if self.stm.locked():
             self.do_unlock()
-        p = PriceFeed(con=self.conf, stm=self.stm, log=self.log)
+        p = PriceFeed(stm=self.stm)
         p.run_feeds()
 
     def do_monitor(self, line=''):
         """Monitors witness."""
         if self.stm.locked():
             self.do_unlock()
-        m = WitnessMonitor(stm=self.stm, con=self.conf, log=self.log, update_time=300, missed=5)
+        m = WitnessMonitor(stm=self.stm, update_time=300, missed=5)
         m.monitor_witness()
 
     def do_check_config(self, line=''):

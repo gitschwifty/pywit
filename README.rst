@@ -63,6 +63,9 @@ Uses
 Running `pywit` by itself will get you an interactive command line session. The first time you open it up, it will run an initialization, getting your witness details and asking if you would like to set up a wallet. You should do this before attempting other commands, as most of them require the wallet and/or witness setup. Once in the interactive shell, use help and help $COMMAND to figure it out. Most command names are intuitive.
 
 Options: -vv for level 2 verbosity, -vvv for level 3, the highest. Testing can be done with -t, no transactions will be broadcasted.
+To enable verbosity or testing in the below commands, put the options between pywit and the subcommands:
+::
+  pywit -vvv feeds
 
 Command Arguments
 -------------------
@@ -71,27 +74,27 @@ Some commands can be run straight from the command line for ease of use. Options
 
 Feeds runs a price feed.
 ::
-pywit feeds (-w WAITTIME -s MIN_SPREAD -p PUBLISH_NOW)
+  pywit feeds (-w WAITTIME -s MIN_SPREAD -p PUBLISH_NOW)
 
 Monitor monitors your witness, disabling or switching to a backup key at a certain number of missed blocks.
 ::
-pywit monitor (-b BACKUP_KEY -m MISSED_BLOCKS -w WAITTIME)
+  pywit monitor (-b BACKUP_KEY -m MISSED_BLOCKS -w WAITTIME)
 
 Enable enables your witness, either with a key passed or from your configuration file.
 ::
-pywit enable (-k KEY)
+  pywit enable (-k KEY)
 
 Disable disables your witness server.
 ::
-pywit disable
+  pywit disable
 
 Status gets and prints your witness status.
 ::
-pywit status
+  pywit status
 
 Update runs through questions to update your witness information.
 ::
-pywit update
+  pywit update
 
 Please add any issues with errors, problems, or features you'd like to request
 ----------------------------------------------------------------------------------
