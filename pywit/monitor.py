@@ -35,7 +35,7 @@ class WitnessMonitor():
             try:
                 m = self.stm.get_missed()
                 logstr = "Updating... {} missed blocks.".format(m)
-                self.log.log(logstr, 2)
+                self.log.log(logstr, 1)
                 if m > last_missed:
                     session_missed += (m - last_missed)
                     last_missed = m
