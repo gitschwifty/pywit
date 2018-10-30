@@ -74,8 +74,8 @@ class SteemExplorer():
     def lock_wallet(self):
         self.stm.wallet.lock()
 
-    def unlock(self, p=''):
-        self.unlock_wallet(p)
+    def unlock(self, p):
+        self.unlock_wallet(p = p)
 
     def lock(self):
         self.stm.wallet.lock()
