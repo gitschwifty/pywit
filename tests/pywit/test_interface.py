@@ -8,15 +8,14 @@ secondpass = "testfourfive"
 
 class TestInterface(unittest.TestCase):
 
-	@classmethod
-	def setUpClass(cls):
-		cls.conf = Configuration()
-		cls.log = Logger()
-		cls.stm = SteemExplorer(con=conf, log=log)
-		cls.stm.delete_wallet(True)
-		cls.stm.create_wallet(firstpass)
-		cls.stm.unlock_wallet(firstpass)
-		cls.stm.lock_wallet()
+	def __init__(self):
+		self.conf = Configuration()
+		self.log = Logger()
+		self.stm = SteemExplorer(con=conf, log=log)
+		self.stm.delete_wallet(True)
+		self.stm.create_wallet(firstpass)
+		self.stm.unlock_wallet(firstpass)
+		self.stm.lock_wallet()
 
 	def test_wallet(self):
 		self.stm.lock_wallet()
