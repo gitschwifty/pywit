@@ -15,7 +15,7 @@ class TestInterface(unittest.TestCase):
 	def test_wallet(self):
 		stm.delete_wallet()
 		stm.create_wallet(firstpass)
-		assertTrue(stm.is_wallet())
+		self.assertTrue(stm.is_wallet())
 		stm.unlock_wallet(firstpass)
 		self.assertTrue(stm.unlocked())
 		self.assertFalse(stm.locked())
