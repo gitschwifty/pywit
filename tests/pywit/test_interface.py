@@ -4,7 +4,7 @@ from pywit.logger import Logger
 import unittest
 
 firstpass = "testtwothree"
-secondpass = "testfourfive
+secondpass = "testfourfive"
 
 conf = Configuartion()
 log = Logger()
