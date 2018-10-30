@@ -11,9 +11,14 @@ log = Logger()
 stm = SteemExplorer(con = conf, log = log, nobroadcast = True)
 
 class TestInterface(unittest.TestCase):
+	@classmethod
+	def setUpClass(cls):
+		cls.conf = Configuration()
+		cls.log = Logger()
+		cls.stm = SteemExplorer(con = cls.conf, log = cls.log, nobroadcast = True)
 
 	def test_wallet(self):
-		stm.delete_wallet()
+		self.stm.delete_wallet()
 		stm.create_wallet(firstpass)
 		self.assertTrue(stm.is_wallet())
 		stm.unlock_wallet(firstpass)
