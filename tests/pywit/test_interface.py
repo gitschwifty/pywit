@@ -17,11 +17,13 @@ class TestInterface(unittest.TestCase):
 		cls.log = Logger()
 		cls.stm = SteemExplorer(con = cls.conf, log = cls.log, nobroadcast = True)
 		cls.stm.delete_wallet()
+		cls.stm.create_wallet(firstpass)
+
+	def test_wallet_locks(self):
+		cls.stm.delete_wallet()
 		cls.assertFalse(cls.stm.is_wallet())
 		cls.stm.create_wallet(firstpass)
 		cls.assertTrue(cls.stm.is_wallet())
-
-	def test_wallet_locks(self):
 		self.stm.unlock_wallet(firstpass)
 		self.assertTrue(self.stm.unlocked())
 		self.assertFalse(self.stm.locked())
@@ -31,8 +33,8 @@ class TestInterface(unittest.TestCase):
 
 	def test_change_passphrase(self):
 		self.stm.unlock(firstpass)
-		self.assertTrue(sstm.unlocked())
-		self.assertFalse(stm.locked())
+		self.assertTrue(self.stm.unlocked())
+		self.assertFalse(self.stm.locked())
 		self.stm.change_passphrase(secondpass)
 		self.stm.lock()
 		self.assertTrue(self.stm.locked())
