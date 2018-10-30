@@ -61,8 +61,9 @@ class SteemExplorer():
     def locked(self):
         return not self.stm.wallet.unlocked()
 
-    def unlock_wallet(self):
-        p = getpass.getpass("Enter your BIP38 passphrase: ")
+    def unlock_wallet(self, p=''):
+        if not p:
+            p = getpass.getpass("Enter your BIP38 passphrase: ")
         if p:
             self.stm.wallet.unlock(p)
             return True
@@ -73,17 +74,34 @@ class SteemExplorer():
     def lock_wallet(self):
         self.stm.wallet.lock()
 
+    def unlock(self, p=''):
+        self.unlock_wallet(p)
+
+    def lock(self):
+        self.stm.wallet.lock()
+
     def check_wallet(self):
         if self.stm.wallet.MasterPassword.config_key:
             print("Master password exists.")
 
-    def create_wallet(self):
-        p = getpass.getpass("Enter your new BIP38 passphrase: ")
+    def create_wallet(self, p=''):
+        if not p:
+            p = getpass.getpass("Enter your new BIP38 passphrase: ")
         if p:
             self.stm.wallet.create(p)
             return True
         else:
             print("Please enter a passphrase to create wallet.")
+            return False
+
+    def change_passphrase(self, p=''):
+        if not p:
+            p = getpass.getpass("Enter your new BIP38 passphrase: ")
+        if self.unlock():
+            self.stm.wallet.changePassphrase(p)
+            return True
+        else:
+            print("Please unlock wallet to change your passphrase.")
             return False
 
     def add_key(self, key):
