@@ -8,7 +8,7 @@ secondpass = "testfourfive"
 
 class TestInterface(unittest.TestCase):
 
-	@class_method
+	@classmethod
 	def setUpClass(cls):
 		cls.conf = Configuration()
 		cls.log = Logger()
