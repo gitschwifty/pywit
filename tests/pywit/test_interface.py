@@ -4,21 +4,18 @@ from pywit.logger import Logger
 import unittest
 
 firstpass = "testtwothree"
-secondpass = "testfourfive"
+secondpass = "testfourfive
+
+conf = Configuartion()
+log = Logger()
+stm = SteemExplorer(con = conf, log = log, nobroadcast = True)
 
 class TestInterface(unittest.TestCase):
 
-	def __init__(self):
-		self.conf = Configuration()
-		self.log = Logger()
-		self.stm = SteemExplorer(con=conf, log=log)
+	def test_wallet(self):
 		self.stm.delete_wallet(True)
 		self.stm.create_wallet(firstpass)
-		self.stm.unlock_wallet(firstpass)
-		self.stm.lock_wallet()
-
-	def test_wallet(self):
-		self.stm.lock_wallet()
+		assertTrue(stm.is_wallet())
 		self.stm.unlock_wallet(firstpass)
 		self.assertTrue(cls.stm.unlocked())
 		self.assertFalse(cls.stm.locked())
