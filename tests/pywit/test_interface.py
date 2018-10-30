@@ -20,10 +20,10 @@ class TestInterface(unittest.TestCase):
 		cls.stm.create_wallet(p = firstpass)
 
 	def test_wallet_locks(self):
-		cls.stm.delete_wallet()
-		cls.assertFalse(cls.stm.is_wallet())
-		cls.stm.create_wallet(p = firstpass)
-		cls.assertTrue(cls.stm.is_wallet())
+		self.stm.delete_wallet()
+		self.assertFalse(self.stm.is_wallet())
+		self.stm.create_wallet(p = firstpass)
+		self.assertTrue(self.stm.is_wallet())
 		self.stm.unlock_wallet(p = firstpass)
 		self.assertTrue(self.stm.unlocked())
 		self.assertFalse(self.stm.locked())

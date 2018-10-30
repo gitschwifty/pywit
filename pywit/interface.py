@@ -97,7 +97,7 @@ class SteemExplorer():
     def change_passphrase(self, p=''):
         if not p:
             p = getpass.getpass("Enter your new BIP38 passphrase: ")
-        if self.unlock():
+        if self.unlocked():
             self.stm.wallet.changePassphrase(p)
             return True
         else:
