@@ -39,7 +39,7 @@ class TestInterface(unittest.TestCase):
 		self.stm.lock()
 		self.assertTrue(self.stm.locked())
 		self.assertFalse(self.stm.unlocked())
-		self.unlock(p = secondpass)
+		self.stm.unlock(p = secondpass)
 		self.assertTrue(self.stm.unlocked())
 		self.stm.change_passphrase(p = firstpass)
 		self.stm.lock()
