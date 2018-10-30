@@ -6,7 +6,7 @@ import unittest
 firstpass = "testtwothree"
 secondpass = "testfourfive"
 
-conf = Configuartion()
+conf = Configuration()
 log = Logger()
 stm = SteemExplorer(con = conf, log = log, nobroadcast = True)
 
