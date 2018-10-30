@@ -7,6 +7,7 @@ from beem.witness import (
     Witness,
     WitnessDoesNotExistsException,)
 
+
 class Configuration():
 
     d = dict()
@@ -20,14 +21,14 @@ class Configuration():
                 'owner': '',
                 'url': '',
                 'pub_key': '',
-                'props': {  'account_creation_fee': {'amount': '3000',
-                                                     'nai': '@@000000021',
-                                                     'precision': 3},
-                            'account_subsidy_budget': 797,
-                            'account_subsidy_decay': 347321,
-                            'maximum_block_size': 65536,
-                            'sbd_interest_rate': 0,
-                        }}
+                'props': {'account_creation_fee': {'amount': '3000',
+                                                   'nai': '@@000000021',
+                                                   'precision': 3},
+                          'account_subsidy_budget': 797,
+                          'account_subsidy_decay': 347321,
+                          'maximum_block_size': 65536,
+                          'sbd_interest_rate': 0,
+                          }}
 
     def read_config(self):
         with open(self.file, 'r') as f:
@@ -59,39 +60,42 @@ class Configuration():
         return True
 
     def ask_config(self, name):
-        self.d['url'] = click.prompt("What is your witness URL?", type=str, default=self.d['url'])
-        default_fee = self.get_float_amount(self.d['props']['account_creation_fee'])
+        self.d['url'] = click.prompt(
+            "What is your witness URL?", type=str, default=self.d['url'])
+        default_fee = self.get_float_amount(
+            self.d['props']['account_creation_fee'])
         creation_fee = click.prompt(
-                        "What should the account creation fee be (STEEM)?",
-                        default=default_fee)
+            "What should the account creation fee be (STEEM)?",
+            default=default_fee)
         while True:
             try:
                 creation_fee = "%s STEEM" % float(creation_fee)
                 break
             except ValueError:
                 creation_fee = click.prompt(
-                                "Please enter a numerical value (STEEM)?",
-                                default=default_fee)
+                    "Please enter a numerical value (STEEM)?",
+                    default=default_fee)
 
-        self.d['props']['account_creation_fee'] = self.get_amount_json(creation_fee)
+        self.d['props']['account_creation_fee'] = self.get_amount_json(
+            creation_fee)
 
         self.d['props']['account_subsidy_budget'] = click.prompt(
-                                "What should the account subsidy budget be?",
-                                default=self.d['props']['account_subsidy_budget'])
+            "What should the account subsidy budget be?",
+            default=self.d['props']['account_subsidy_budget'])
 
         self.d['props']['account_subsidy_decay'] = click.prompt(
-                                "What should the account subsidy decay rate be?",
-                                default=self.d['props']['account_subsidy_decay'])
+            "What should the account subsidy decay rate be?",
+            default=self.d['props']['account_subsidy_decay'])
 
         self.d['props']['sbd_interest_rate'] = click.prompt(
-                                "What should the SBD interest rate be?",
-                                default=self.d['props']['sbd_interest_rate'])
+            "What should the SBD interest rate be?",
+            default=self.d['props']['sbd_interest_rate'])
 
         self.d['pub_key'] = click.prompt("What is your public signing key?",
-                                type=str,
-                                default=self.d['pub_key'])
+                                         type=str,
+                                         default=self.d['pub_key'])
 
-        #maximum_block_size not included because you shouldn't change that
+        # maximum_block_size not included because you shouldn't change that
 
     def set_pub_key(self, key):
         self.d['pub_key'] = key

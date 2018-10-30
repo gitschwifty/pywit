@@ -18,6 +18,15 @@ setup(
         'beem',
         'gnureadline',
         'cmd2',
+        'websocket-client',
+        'pycryptodomex',
+        'future',
+        'Events',
+        'ecdsa',
+        'scrypt',
+        'future',
+        'pytz',
+        'pylibscrypt',
     ],
     entry_points={
         'console_scripts': [

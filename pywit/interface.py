@@ -24,6 +24,7 @@ import getpass
 
 DISABLE_KEY = 'STM1111111111111111111111111111111114T1Anm'
 
+
 class SteemExplorer():
     def __init__(self, con: Configuration, log: Logger, nobroadcast=True):
         self.conf = con
@@ -38,7 +39,8 @@ class SteemExplorer():
     def compute_cost(self, type=1, tx_size=1000, perm_len=10, pperm_len=0):
         rc = RC()
         if type == 1:
-            cost = rc.comment(tx_size=tx_size, permlink_length=perm_len, parent_permlink_length=pperm_len)
+            cost = rc.comment(
+                tx_size=tx_size, permlink_length=perm_len, parent_permlink_length=pperm_len)
         elif type == 2:
             cost = rc.vote(tx_size=tx_size)
         elif type == 3:
@@ -172,7 +174,8 @@ class SteemExplorer():
         pprint(com)
         pprint(signed_tx)
         print("Size is %i" % sz)
-        self.compute_cost(type=1, tx_size=sz, perm_len=len(com['permlink']), pperm_len=len(com['parent_permlink']))
+        self.compute_cost(type=1, tx_size=sz, perm_len=len(
+            com['permlink']), pperm_len=len(com['parent_permlink']))
         broadcast_tx = tx.broadcast()
         pprint(broadcast_tx)
 
@@ -182,21 +185,31 @@ class SteemExplorer():
         w = Witness(self.conf.d['owner'])
         if enable:
             if key:
-                if w.update(key, self.conf.d['url'], self.conf.d['props'], account=self.conf.d['owner']):
+                if w.update(key,
+                            self.conf.d['url'],
+                            self.conf.d['props'],
+                            account=self.conf.d['owner']):
                     self.log.log("Witness updated with new parameters.", 2)
             else:
-                if w.update(self.conf.d['pub_key'], self.conf.d['url'], self.conf.d['props'], account=self.conf.d['owner']):
+                if w.update(self.conf.d['pub_key'],
+                            self.conf.d['url'],
+                            self.conf.d['props'],
+                            account=self.conf.d['owner']):
                     self.log.log("Witness updated with new parameters.", 2)
         else:
-            if w.update(DISABLE_KEY, self.conf.d['url'], self.conf.d['props'], account=self.conf.d['owner']):
+            if w.update(DISABLE_KEY,
+                        self.conf.d['url'],
+                        self.conf.d['props'], account=self.conf.d['owner']):
                 self.log.log("Witness disabled.", 1)
-
 
     def change_key(self, pub_key):
         if self.stm.wallet.locked():
             self.unlock_wallet()
         w = Witness(self.conf.d['owner'])
-        if w.update(pub_key, self.conf.d['url'], self.conf.d['props'], account=self.conf.d['owner']):
+        if w.update(pub_key,
+                    self.conf.d['url'],
+                    self.conf.d['props'],
+                    account=self.conf.d['owner']):
             logstr = "Witness public key updated to {}.".format(pub_key)
             self.log.log(logstr, 1)
 
