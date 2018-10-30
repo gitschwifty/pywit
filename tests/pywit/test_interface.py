@@ -13,7 +13,7 @@ stm = SteemExplorer(con = conf, log = log, nobroadcast = True)
 class TestInterface(unittest.TestCase):
 
 	def test_wallet(self):
-		stm.delete_wallet(True)
+		stm.delete_wallet()
 		stm.create_wallet(firstpass)
 		assertTrue(stm.is_wallet())
 		stm.unlock_wallet(firstpass)
@@ -34,4 +34,4 @@ class TestInterface(unittest.TestCase):
 		self.unlock(secondpass)
 		self.assertTrue(stm.unlocked())
 		stm.change_passphrase(firstpass)
-		stm.lock()
+		gstm.lock()
