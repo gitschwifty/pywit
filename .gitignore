@@ -58,4 +58,8 @@ build
 ehthumbs.db
 Thumbs.db
 
-
+# Test related
+.tox/
+.tox/*
+.pytest_cache/
+.pytest_cache/*

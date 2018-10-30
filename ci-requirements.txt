@@ -23,3 +23,5 @@ gnureadline==6.3.8
 beem==0.20.9
 prettytable
 cmd2
+websocket-client
+pycryptodomex

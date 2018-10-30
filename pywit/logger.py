@@ -25,6 +25,7 @@ lines = [
     """'u uuuuuuuuuuuuuuuuuu u'""",
     """uuuuuuuuuuuuuuuuuuuu"""]
 
+
 class Logger():
     def __init__(self, level=1):
         self.level = level

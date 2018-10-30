@@ -12,6 +12,8 @@ from .monitor import WitnessMonitor
 """Maybe remove the logger from this file altogether, only use it for automated
 functions. History, etc. will work for the rest of the pywallet commands through
 cmd2"""
+
+
 class PyWallet(cmd2.Cmd):
     """Python Steem Wallet Interface using Beem."""
 
@@ -48,7 +50,8 @@ class PyWallet(cmd2.Cmd):
         self.stm.lock_wallet()
         print("Pywit closing now.")
 
-    def unlockedhook(self, data: cmd2.plugin.PostcommandData) -> cmd2.plugin.PostcommandData:
+    def unlockedhook(self,
+                    data: cmd2.plugin.PostcommandData) -> cmd2.plugin.PostcommandData:
         if self.stm.unlocked():
             self.prompt = ">>> "
         return data
@@ -57,12 +60,14 @@ class PyWallet(cmd2.Cmd):
         """Run: 'init [witness_name]' or 'init'
         Initialize your witness configuration."""
         if self.conf.is_config():
-            print("Your witness account %s is already initialized." % self.conf.d['owner'])
+            print("Your witness account %s is already initialized." %
+                  self.conf.d['owner'])
         else:
             if name:
                 print("Checking your witness information.")
             else:
-                name = click.prompt("What is the name of your witness?", type=str)
+                name = click.prompt(
+                    "What is the name of your witness?", type=str)
             if self.conf.check_config(name):
                 print("Your witness account was initialized from the network.")
             else:
@@ -75,7 +80,7 @@ class PyWallet(cmd2.Cmd):
             print("Initializing your wallet.")
             self.do_new_wallet()
 
-        #ask them if they want to enable witness
+        # ask them if they want to enable witness
 
     def do_new_wallet(self, line=''):
         """Usage: 'new_wallet'
@@ -94,17 +99,18 @@ class PyWallet(cmd2.Cmd):
     def do_update_witness(self, line=''):
         """Update witness."""
         ans = click.confirm("Would you like to update %s's witness profile?" % self.conf.d['owner'],
-                      default=True)
+                            default=True)
         if ans:
             self.conf.check_config(self.conf.d['owner'])
             self.conf.ask_config(self.conf.d['owner'])
 
-            ## show them all pretty like
+            # show them all pretty like
 
-            ans = click.confirm("Would you like to confirm these updates?", default=True)
+            ans = click.confirm(
+                "Would you like to confirm these updates?", default=True)
             if(ans):
-               self.conf.write_config()
-               self.stm.update(enable=True)
+                self.conf.write_config()
+                self.stm.update(enable=True)
             else:
                 print("Updates discarded.")
                 self.conf.check_config(self.conf.d['owner'])
@@ -141,13 +147,15 @@ class PyWallet(cmd2.Cmd):
     def do_create_wallet(self, line=''):
         """Create a new wallet."""
         if self.stm.is_wallet():
-            print("A wallet already exists. Please unlock or delete and create a new one.")
+            print("A wallet already exists. Please unlock or delete and \
+                create a new one.")
         else:
             self.stm.create_wallet()
 
     def do_delete_wallet(self, line=''):
         """Delete your wallet."""
-        ans = click.confirm("Would you really like to delete your wallet?", default=False)
+        ans = click.confirm(
+            "Would you really like to delete your wallet?", default=False)
         if ans:
             self.stm.delete_wallet()
 
@@ -163,7 +171,7 @@ class PyWallet(cmd2.Cmd):
             return
         self.conf.check_config(self.conf.d['owner'])
         self.stm.update()
-        #call an interface method
+        # call an interface method
 
     def do_disable(self, line=''):
         """Disable witness."""
@@ -186,14 +194,21 @@ class PyWallet(cmd2.Cmd):
 
     def do_txcost(self, line=''):
         """Calculates cost of a transaction."""
-        type = click.prompt("What type of transaction? Comment 1, Vote 2, Transfer 3, Custom Json 4", type=int)
+        type = click.prompt(
+            "What type of transaction? Comment 1, Vote 2, Transfer 3, \
+            Custom Json 4", type=int)
         sz = click.prompt("What size transaction? [Bytes]", type=int)
         if type == 1:
-            plen = click.prompt("What is the length of the permlink? [Characters]", type=int)
-            pplen = click.prompt("What is the length of the parent permlink? [Characters]", type=int)
+            plen = click.prompt(
+                "What is the length of the permlink? [Characters]",
+                type=int)
+            pplen = click.prompt(
+                "What is the length of the parent permlink? [Characters]",
+                type=int)
         if type == 3:
             plen = click.prompt("How many market operations?", type=int)
-        self.stm.compute_cost(type=type, tx_size=sz, perm_len=plen, pperm_len=pplen)
+        self.stm.compute_cost(type=type, tx_size=sz,
+                              perm_len=plen, pperm_len=pplen)
 
     def do_delete_witness(self, name):
         """Usage: 'delete_witness NAME'
@@ -216,13 +231,16 @@ class PyWallet(cmd2.Cmd):
             return
         self.conf.set_pub_key(key)
         if notself.stm.check_key(name=self.conf.d['owner'], key=key):
-            ans = click.confirm("Your signing key is not the same as this one. Would you like to enable this key?", default=True)
+            ans = click.confirm(
+                "Your signing key is not the same as this one. Would you \
+                like to enable this key?", default=True)
             if ans:
-                 self.do_enable(pub_key=key)
+                self.do_enable(pub_key=key)
 
     def do_publish_feed(self, line=''):
         """Publish price feed."""
-        pri = click.prompt("Please enter price to publish [SBD/Steem]", type=float)
+        pri = click.prompt(
+            "Please enter price to publish [SBD/Steem]", type=float)
         self.stm.pubfeed(pri)
 
     def do_keygen(self, line=''):

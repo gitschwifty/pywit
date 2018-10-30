@@ -11,6 +11,8 @@ log = Logger()
 stm = SteemExplorer(con=conf, log=log, nobroadcast=False)
 
 """Add more options?"""
+
+
 @click.group(invoke_without_command=True)
 @click.option('-v', '--verbose', count=True, help='Verbosity level: default 1, max 3', default=1)
 @click.option('-t', '--test', is_flag=True, help='No broadcast mode for testing.')
@@ -33,7 +35,9 @@ def pywit(ctx, verbose, test):
             log.log("Configuration or wallet not created. Run 'pywit'. Exiting", 1)
             quit(0)
 
+
 """Definitely add more quick commands, status, enable, etc."""
+
 
 @pywit.command()
 @click.option('-w', '--wait', default=6000, help='Seconds to wait between updates.')
@@ -44,14 +48,17 @@ def feeds(wait, min_spread, publish_now):
     p = PriceFeed(stm=stm)
     p.run_feeds(wait, min_spread, publish_now)
 
+
 @pywit.command()
 @click.option('-b', '--backup-key', default='', help='Backup key to switch to.')
 @click.option('-m', '--missed-blocks', default=5, help='Missed blocks before disabling/switching.')
 @click.option('-w', '--wait', default=300, help='Seconds to wait between checks.')
 def monitor(backup_key, missed_blocks, wait):
     """Monitors your witness's missed blocks"""
-    m = WitnessMonitor(stm=stm, update_time=wait, missed=missed_blocks, backup=backup_key)
+    m = WitnessMonitor(stm=stm, update_time=wait,
+                       missed=missed_blocks, backup=backup_key)
     m.monitor_witness()
+
 
 @pywit.command()
 @click.option('-k', '--key', default='', help='Key to enable.')
@@ -62,15 +69,18 @@ def enable(key):
     else:
         stm.update()
 
+
 @pywit.command()
 def disable():
     """Disables your witness signing key."""
     stm.disable_witness()
 
+
 @pywit.command()
 def status():
     """Gets your witness status and prints."""
     stm.print_witness()
+
 
 @pywit.command()
 def update():
@@ -80,18 +90,21 @@ def update():
 
     conf.print_json(conf.d)
 
-    ans = click.confirm("Would you like to confirm these updates?", default=True)
+    ans = click.confirm(
+        "Would you like to confirm these updates?", default=True)
     if(ans):
-       conf.write_config()
-       stm.update(enable=True)
+        conf.write_config()
+        stm.update(enable=True)
     else:
         conf.check_config(self.conf.d['owner'])
         log.log("Witness updates discarded.", 1)
+
 
 @pywit.command()
 def test_warning():
     """Tests level 0 logging level. Only for emergency warnings, e.g. witness missed too many blocks while being monitored."""
     log.log("LOGGER WARNING TEST PLEASE IGNORE", 0)
+
 
 def check_config():
     if stm.is_wallet() and conf.is_config():
