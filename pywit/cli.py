@@ -65,7 +65,7 @@ def monitor(backup_key, missed_blocks, wait):
 def enable(key):
     """Enables your witness signing key."""
     if key:
-        stm.update(key=self.b)
+        stm.update(key=key)
     else:
         stm.update()
 
@@ -85,8 +85,8 @@ def status():
 @pywit.command()
 def update():
     """Gets witness update and publishes updated witness information."""
-    conf.check_config(self.conf.d['owner'])
-    conf.ask_config(self.conf.d['owner'])
+    conf.check_config(conf.d['owner'])
+    conf.ask_config(conf.d['owner'])
 
     conf.print_json(conf.d)
 
@@ -96,7 +96,7 @@ def update():
         conf.write_config()
         stm.update(enable=True)
     else:
-        conf.check_config(self.conf.d['owner'])
+        conf.check_config(conf.d['owner'])
         log.log("Witness updates discarded.", 1)
 
 
