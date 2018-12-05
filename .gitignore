@@ -63,3 +63,6 @@ Thumbs.db
 .tox/*
 .pytest_cache/
 .pytest_cache/*
+
+# Personal scripts for quick multi-line commands
+scripts/*

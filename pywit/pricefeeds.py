@@ -1,5 +1,6 @@
 import requests
 import time
+
 from .config import Configuration
 from .interface import SteemExplorer
 from .logger import Logger

@@ -1,16 +1,15 @@
+import click
+
 from .pywallet import PyWallet
 from .config import Configuration
 from .interface import SteemExplorer
 from .pricefeeds import PriceFeed
 from .logger import Logger
 from .monitor import WitnessMonitor
-import click
 
 conf = Configuration()
 log = Logger()
 stm = SteemExplorer(con=conf, log=log, nobroadcast=False)
-
-"""Add more options?"""
 
 
 @click.group(invoke_without_command=True)
@@ -34,9 +33,6 @@ def pywit(ctx, verbose, test):
         else:
             log.log("Configuration or wallet not created. Run 'pywit'. Exiting", 1)
             quit(0)
-
-
-"""Definitely add more quick commands, status, enable, etc."""
 
 
 @pywit.command()
@@ -65,7 +61,7 @@ def monitor(backup_key, missed_blocks, wait):
 def enable(key):
     """Enables your witness signing key."""
     if key:
-        stm.update(key=self.b)
+        stm.update(key=key)
     else:
         stm.update()
 
@@ -79,14 +75,14 @@ def disable():
 @pywit.command()
 def status():
     """Gets your witness status and prints."""
-    stm.print_witness()
+    conf.print_json(stm.witness_json(conf.d['owner']))
 
 
 @pywit.command()
 def update():
     """Gets witness update and publishes updated witness information."""
-    conf.check_config(self.conf.d['owner'])
-    conf.ask_config(self.conf.d['owner'])
+    conf.check_config(conf.d['owner'])
+    conf.ask_config(conf.d['owner'])
 
     conf.print_json(conf.d)
 
@@ -94,9 +90,9 @@ def update():
         "Would you like to confirm these updates?", default=True)
     if(ans):
         conf.write_config()
-        stm.update(enable=True)
+        stm.witness_set_properties()
     else:
-        conf.check_config(self.conf.d['owner'])
+        conf.check_config(conf.d['owner'])
         log.log("Witness updates discarded.", 1)
 
 

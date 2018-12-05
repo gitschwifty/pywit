@@ -1,1 +1,0 @@
-"""Pywit unit tests."""
