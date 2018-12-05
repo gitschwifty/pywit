@@ -52,7 +52,7 @@ class TestInterface(unittest.TestCase):
                                 nobroadcast = False)
 
         gp.return_value = firstpass
-        self.assertRaises(MissingKeyError, self.stm.disable_witness)
+        self.assertRaises(MissingKeyError, self.stm.update)
 
         self.stm = SteemExplorer(con = self.conf, log = self.log,
                                 nobroadcast = True)
