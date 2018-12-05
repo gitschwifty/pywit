@@ -138,7 +138,7 @@ class SteemExplorer():
         return False
 
     def disable_witness(self):
-        return self.update(enable=False)
+        return self.witness_set_properties(DISABLE_KEY)
 
     def witlist(self):
         w = Witnesses()
