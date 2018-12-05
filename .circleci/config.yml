@@ -28,6 +28,12 @@ jobs:
           - v1-dependencies-
 
       - run:
+        name: Setup Code Climate test-reporter
+        command: |
+          curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+          chmod +x ./cc-test-reporter
+
+      - run:
           name: install dependencies
           command: |
             python3 -m venv venv
@@ -48,7 +54,9 @@ jobs:
           name: run tests
           command: |
             . venv/bin/activate
+            ./cc-test-reporter before-build
             tox -e py36
+            ./cc-test-reporter after-build --exit-code $?
 
       - store_artifacts:
           path: test-reports
