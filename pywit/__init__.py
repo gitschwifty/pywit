@@ -1,0 +1,1 @@
+"""Pywit command line tool."""

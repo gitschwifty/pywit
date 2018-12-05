@@ -1,7 +1,7 @@
-import json
 import os
+import json
 import click
-from os.path import expanduser, isfile
+
 from beem.amount import Amount
 from beem.witness import (
     Witness,
@@ -9,10 +9,8 @@ from beem.witness import (
 
 
 class Configuration():
-
-    d = dict()
-
     def __init__(self, file='~/.pywitness.json'):
+        self.d = dict()
         self.file = os.path.expanduser(file)
         if self.is_config():
             self.read_config()
@@ -94,7 +92,7 @@ class Configuration():
         self.d['pub_key'] = click.prompt("What is your public signing key?",
                                          type=str,
                                          default=self.d['pub_key'])
-
+        self.write_config()
         # maximum_block_size not included because you shouldn't change that
 
     def set_pub_key(self, key):

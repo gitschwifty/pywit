@@ -1,4 +1,5 @@
 import time
+
 from shutil import get_terminal_size
 
 lines = [
