@@ -6,7 +6,6 @@ import tempfile
 import os
 from unittest import mock
 from beem.exceptions import (
-    WrongMasterPasswordException,
     AccountDoesNotExistsException,
     MissingKeyError,
     NoWalletException,
@@ -360,5 +359,3 @@ class TestInterface(unittest.TestCase):
                                 nobroadcast = True)
         self.assertTrue(self.stm.witness_set_properties(pubkey))
         self.assertTrue(self.stm.witness_set_properties())
-
-"""Placeholder for space."""

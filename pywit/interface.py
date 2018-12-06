@@ -11,15 +11,10 @@ from beem.witness import (
     WitnessesObject,
 )
 from beem.exceptions import (
-    NoWalletException,
     WrongMasterPasswordException,
 )
 from beemgraphenebase.account import BrainKey
 from beem.instance import set_shared_steem_instance
-from beem.transactionbuilder import TransactionBuilder
-from beembase.operations import Comment
-
-from sys import getsizeof
 
 from .config import Configuration
 from .logger import Logger

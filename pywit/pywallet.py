@@ -12,7 +12,7 @@ from .monitor import WitnessMonitor
 class PyWallet(cmd2.Cmd):
     """Python Steem Wallet Interface using Beem."""
 
-    def __init__(self, stm):
+    def __init__(self, stm: SteemExplorer):
         super().__init__()
         self.register_postcmd_hook(self.unlockedhook)
         self.allow_cli_args = False
