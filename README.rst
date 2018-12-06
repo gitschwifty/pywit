@@ -10,6 +10,8 @@ As of right now, this has only been verifiably tested with Python 3.6.x. More wi
 
 .. image:: https://circleci.com/gh/gitschwifty/pywit/tree/master.svg?style=svg
     :target: https://circleci.com/gh/gitschwifty/pywit/tree/master
+.. image:: https://api.codacy.com/project/badge/Grade/fa2685442c974c29935e9b711922c1c8    
+    :target: https://www.codacy.com/app/gitschwifty/pywitutm_source=github.com&amp;utm_medium=referral&amp;utm_content=gitschwifty/pywit&amp;utm_campaign=Badge_Grade
 .. image:: https://api.codeclimate.com/v1/badges/5f6eb763c21a40bb0d3a/maintainability
    :target: https://codeclimate.com/github/gitschwifty/pywit/maintainability
    :alt: Maintainability
