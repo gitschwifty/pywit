@@ -18,7 +18,6 @@ from beemgraphenebase.account import BrainKey
 from beem.instance import set_shared_steem_instance
 from beem.transactionbuilder import TransactionBuilder
 from beembase.operations import Comment
-from beem.amount import Amount
 
 from sys import getsizeof
 
