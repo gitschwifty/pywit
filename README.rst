@@ -10,6 +10,12 @@ As of right now, this has only been verifiably tested with Python 3.6.x. More wi
 
 .. image:: https://circleci.com/gh/gitschwifty/pywit/tree/master.svg?style=svg
     :target: https://circleci.com/gh/gitschwifty/pywit/tree/master
+.. image:: https://api.codeclimate.com/v1/badges/5f6eb763c21a40bb0d3a/maintainability
+   :target: https://codeclimate.com/github/gitschwifty/pywit/maintainability
+   :alt: Maintainability
+.. image:: https://api.codeclimate.com/v1/badges/5f6eb763c21a40bb0d3a/test_coverage
+   :target: https://codeclimate.com/github/gitschwifty/pywit/test_coverage
+   :alt: Test Coverage
 
 Dependencies
 -------------------
