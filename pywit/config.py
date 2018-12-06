@@ -7,7 +7,6 @@ from beem.witness import (
     Witness,
     WitnessDoesNotExistsException,)
 
-
 class Configuration():
     def __init__(self, file='~/.pywitness.json'):
         self.d = dict()
@@ -35,9 +34,6 @@ class Configuration():
     def write_config(self):
         with open(self.file, 'w') as f:
             f.write(json.dumps(self.d, indent=4))
-
-    def print_json(self, js):
-        print(json.dumps(js, indent=4))
 
     def is_config(self):
         return os.path.isfile(self.file)
@@ -74,8 +70,7 @@ class Configuration():
                     "Please enter a numerical value (STEEM)?",
                     default=default_fee)
 
-        self.d['props']['account_creation_fee'] = self.get_amount_json(
-            creation_fee)
+        self.d['props']['account_creation_fee'] = Amount(creation_fee).json()
 
         self.d['props']['account_subsidy_budget'] = click.prompt(
             "What should the account subsidy budget be?",
@@ -98,9 +93,3 @@ class Configuration():
     def set_pub_key(self, key):
         self.d['pub_key'] = key
         self.write_config()
-
-    def get_amount_json(self, str):
-        return Amount(str).json()
-
-    def get_float_amount(self, amt: dict):
-        return Amount(amt).amount

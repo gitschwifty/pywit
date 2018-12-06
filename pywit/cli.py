@@ -1,5 +1,6 @@
 import click
 
+from .util import print_json
 from .pywallet import PyWallet
 from .config import Configuration
 from .interface import SteemExplorer
@@ -75,7 +76,7 @@ def disable():
 @pywit.command()
 def status():
     """Gets your witness status and prints."""
-    conf.print_json(stm.witness_json(conf.d['owner']))
+    print_json(stm.witness_json(conf.d['owner']))
 
 
 @pywit.command()
@@ -84,7 +85,7 @@ def update():
     conf.check_config(conf.d['owner'])
     conf.ask_config(conf.d['owner'])
 
-    conf.print_json(conf.d)
+    print_json(conf.d)
 
     ans = click.confirm(
         "Would you like to confirm these updates?", default=True)
