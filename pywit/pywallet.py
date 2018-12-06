@@ -2,6 +2,7 @@ import click
 import cmd2
 
 from prettytable import PrettyTable
+from .util import print_json
 from .config import Configuration
 from .interface import SteemExplorer
 from .pricefeeds import PriceFeed
@@ -174,12 +175,12 @@ class PyWallet(cmd2.Cmd):
         Get witness details."""
         w = self.stm.witness_json(name)
         if w:
-            self.conf.print_json(w)
+            print_json(w)
 
     def do_status(self, line=''):
         """Your Witness Status."""
         self.conf.check_config(self.conf.d['owner'])
-        self.conf.print_json(self.stm.witness_json(self.conf.d['owner']))
+        print_json(self.stm.witness_json(self.conf.d['owner']))
 
     def do_list_witness(self, line=''):
         """Returns data for all witnesses."""
@@ -302,7 +303,7 @@ class PyWallet(cmd2.Cmd):
     def do_check_config(self, line=''):
         """Prints out current configuration file."""
         if self.conf.is_config():
-            self.conf.print_json(self.conf.d)
+            print_json(self.conf.d)
         else:
             self.poutput(
                 "There is no configuration file available. Please run init.")

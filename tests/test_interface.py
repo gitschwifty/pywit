@@ -2,6 +2,8 @@ from pywit.interface import SteemExplorer
 from pywit.config import Configuration
 from pywit.logger import Logger
 import unittest
+import tempfile
+import os
 from unittest import mock
 from beem.exceptions import (
     WrongMasterPasswordException,
@@ -23,13 +25,14 @@ brain = "HIGUERO KHANKAH LA BITTER BABBLER INLYING GAN SECALIN PREBORN DROME PED
 privkey = "5JbM6ziPqAtsMeWy6uKfC4PQWqkehkjaWTr5qbUrE8HW8mdaP24"
 pubkey = "STM6PfdHebimMt1LkRPzy3JyBqXeWUj1XoQzNNuuTuym92WBNaT6i"
 wif = "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"
-tmpconf = "/tmp/.pywit.interface.test.json"
+tmpconf = tempfile.mkstemp()
+os.remove(tmpconf[1])
 
 
 class TestInterface(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.conf = Configuration(tmpconf)
+        cls.conf = Configuration(tmpconf[1])
         cls.conf.check_config(realacc)
         cls.log = Logger()
         cls.stm = SteemExplorer(con = cls.conf, log = cls.log,
@@ -295,11 +298,11 @@ class TestInterface(unittest.TestCase):
         # Test getting price feed
         # conf.d test
         p = self.stm.get_price_feed()
-        self.assertTrue(p > 0.05)
+        self.assertTrue(p > 0.001)
 
         # name test
         p = self.stm.get_price_feed(name=realacc)
-        self.assertTrue(p > 0.05)
+        self.assertTrue(p > 0.001)
 
         # fake test
         self.assertFalse(self.stm.get_price_feed(name=fakename))

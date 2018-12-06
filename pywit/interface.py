@@ -18,6 +18,7 @@ from beemgraphenebase.account import BrainKey
 from beem.instance import set_shared_steem_instance
 from beem.transactionbuilder import TransactionBuilder
 from beembase.operations import Comment
+from beem.amount import Amount
 
 from sys import getsizeof
 
@@ -198,13 +199,13 @@ class SteemExplorer():
     def get_price_feed(self, name=''):
         try:
             if name:
-                w = Witness(name)
-                p = self.conf.get_float_amount(
-                    w.json()['sbd_exchange_rate']['base'])
+                wjson = Witness(name).json()
+                p = (float(wjson['sbd_exchange_rate']['base']['amount'])
+                          / wjson['sbd_exchange_rate']['base']['precision'])
             else:
-                w = Witness(self.conf.d['owner'])
-                p = self.conf.get_float_amount(
-                    w.json()['sbd_exchange_rate']['base'])
+                wjson = Witness(self.conf.d['owner']).json()
+                p = (float(wjson['sbd_exchange_rate']['base']['amount'])
+                          / wjson['sbd_exchange_rate']['base']['precision'])
         except WitnessDoesNotExistsException:
             return False
         return p
