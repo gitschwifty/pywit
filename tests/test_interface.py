@@ -210,7 +210,7 @@ class TestInterface(unittest.TestCase):
         # Real account name
         m = self.stm.get_rc(realacc)
         self.assertTrue(m['current_mana'] > 0)
-        self.assertTrue(m['max_mana'] > m['current_mana'])
+        self.assertTrue(m['max_mana'] >= m['current_mana'])
         self.assertTrue(m['current_pct'] > 0)
 
         # Incorrect account name
