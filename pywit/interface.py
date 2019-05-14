@@ -20,7 +20,7 @@ from .config import Configuration
 from .logger import Logger
 
 DISABLE_KEY = 'STM1111111111111111111111111111111114T1Anm'
-NODE_LIST = ["https://appbasetest.timcliff.com", "https://steemd.minnowsupportproject.org", "https://steemd.privex.org"]
+NODE_LIST = ["https://steemd.minnowsupportproject.org", "https://steemd.privex.org"]
 
 class SteemExplorer():
     def __init__(self, con: Configuration, log: Logger, nobroadcast=True, active=''):
