@@ -163,7 +163,7 @@ class TestInterface(unittest.TestCase):
         self.stm = SteemExplorer(con = self.conf, log = self.log,
                                 nobroadcast = True)
 
-    @pytest.mark.skip(reason="RC api not working on nodes")
+    @unittest.skip("RC API not working")
     def test_cost_compute(self):
         # Test all RC costs with default function values against previously
         # recorded low cost transaction values.
@@ -208,7 +208,7 @@ class TestInterface(unittest.TestCase):
         self.stm.lock()
         self.assertFalse(self.stm.add_key(privkey))
 
-    @pytest.mark.skip(reason="RC api not working on nodes")
+    @unittest.skip("RC API not working")
     def test_get_rc(self):
         # Tests all cases of the get rc function
         # Real account name
