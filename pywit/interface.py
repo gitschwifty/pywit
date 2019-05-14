@@ -20,12 +20,13 @@ from .config import Configuration
 from .logger import Logger
 
 DISABLE_KEY = 'STM1111111111111111111111111111111114T1Anm'
-
+NODE_LIST = ["https://appbasetest.timcliff.com", "https://steemd.minnowsupportproject.org", "https://steemd.privex.org"]
 
 class SteemExplorer():
     def __init__(self, con: Configuration, log: Logger, nobroadcast=True, active=''):
         self.conf = con
-        self.stm = Steem(nobroadcast=nobroadcast, unsigned=nobroadcast)
+        self.stm = Steem(node="https://appbasetest.timcliff.com", nobroadcast=nobroadcast, unsigned=nobroadcast)
+        self.stm.set_default_nodes(NODE_LIST)
         self.log = log
         set_shared_steem_instance(self.stm)
 
