@@ -195,11 +195,11 @@ class SteemExplorer():
             if name:
                 wjson = Witness(name).json()
                 p = (float(wjson['sbd_exchange_rate']['base']['amount'])
-                          / wjson['sbd_exchange_rate']['base']['precision'])
+                          / 10**wjson['sbd_exchange_rate']['base']['precision'])
             else:
                 wjson = Witness(self.conf.d['owner']).json()
                 p = (float(wjson['sbd_exchange_rate']['base']['amount'])
-                          / wjson['sbd_exchange_rate']['base']['precision'])
+                          / 10**wjson['sbd_exchange_rate']['base']['precision'])
         except WitnessDoesNotExistsException:
             return False
         return p

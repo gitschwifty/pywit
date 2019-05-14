@@ -280,13 +280,13 @@ class PriceFeed():
                 self.log.log(logstr, 1)
                 self.pub_today = 0
             else:
-                logstr = "Percent difference {:.2f}% greater than 25%, \
-                    not publishing.".format(
+                logstr = ("Percent difference {:.2f}% greater than 25%," 
+                    " not publishing.").format(
                     per)
                 self.log.log(logstr, 1)
         else:
-            logstr = "Percent difference {:.2f}% lower than minimum spread \
-                {:.2f}%, not publishing.".format(
+            logstr = ("Percent difference {:.2f}% lower than minimum spread" 
+                " {:.2f}%, not publishing.").format(
                 per, self.min_spread)
             self.log.log(logstr, 1)
             self.pub_today += 1
