@@ -50,7 +50,7 @@ class PriceFeed():
             # multiply and return
             btu = bt * tu
             logstr = ("Bitcoin to USD Price (Proxied through USDT):"
-                "{:.4f} USD per BTC").format(
+                " {:.4f} USD per BTC").format(
                 btu)
             self.log.log(logstr, 2)
 
@@ -329,7 +329,7 @@ class PriceFeed():
         self.min_spread = spread
         self.last_price = self.stm.get_price_feed()
         logstr = ("Running price feeds with minimum spread {:.2f}"
-                "and sleep time {:.2f} minutes.").format(
+                " and sleep time {:.2f} minutes.").format(
             self.min_spread, (slptime / 60))
         self.log.log(logstr, 1)
         while True:
