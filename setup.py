@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name='pywit',
-    version='1.2.1',
+    version='1.2.2',
     description='Steem Python Witness Toolkit',
     packages=find_packages(),
     setup_requires=['pytest-runner'],
@@ -13,6 +13,7 @@ setup(
     install_requires=[
         'Click',
         'click-spinner',
+        'urllib3 <1.25',
         'requests',
         'prettytable',
         'beem',

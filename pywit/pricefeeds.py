@@ -49,8 +49,8 @@ class PriceFeed():
 
             # multiply and return
             btu = bt * tu
-            logstr = "Bitcoin to USD Price (Proxied through USDT): \
-                {:.4f} USD per BTC".format(
+            logstr = ("Bitcoin to USD Price (Proxied through USDT):"
+                "{:.4f} USD per BTC").format(
                 btu)
             self.log.log(logstr, 2)
 
@@ -113,9 +113,12 @@ class PriceFeed():
 
             try:
                 self.log.log("Querying Bittrex", 2)
-                r = requests.get(
-                    'https://bittrex.com/api/v1.1/public/getmarketsummary?market=BTC-STEEM',
-                    timeout=30)
+                try:
+                    r = requests.get(
+                        'https://bittrex.com/api/v1.1/public/getmarketsummary?market=BTC-STEEM',
+                        timeout=30)
+                except requests.exceptions.RequestException as e:
+                    self.log.log(e.str, 1)
                 if r.status_code == 200:
                     d = r.json()['result'][0]
                     prices.append(float(d['Last']))
@@ -123,8 +126,11 @@ class PriceFeed():
                     self.log.log(logstr, 2)
 
                 self.log.log("Querying Binance", 2)
-                r = requests.get(
-                    'https://api.binance.com/api/v1/ticker/24hr', timeout=30)
+                try:
+                    r = requests.get(
+                        'https://api.binance.com/api/v1/ticker/24hr', timeout=30)
+                except requests.exceptions.RequestException as e:
+                    self.log.log(e.str, 1)
                 if r.status_code == 200:
                     d = [x for x in r.json() if x['symbol'] == 'STEEMBTC'][0]
                     prices.append(float(d['lastPrice']))
@@ -132,9 +138,12 @@ class PriceFeed():
                     self.log.log(logstr, 2)
 
                 self.log.log("Querying Poloniex", 2)
-                r = requests.get(
-                    'https://poloniex.com/public?command=returnTicker',
-                    timeout=30)
+                try:
+                    r = requests.get(
+                        'https://poloniex.com/public?command=returnTicker',
+                        timeout=30)
+                except requests.exceptions.RequestException as e:
+                    self.log.log(e.str, 1)
                 if r.status_code == 200:
                     d = r.json()['BTC_STEEM']
                     prices.append(float(d['last']))
@@ -162,9 +171,12 @@ class PriceFeed():
 
             try:
                 self.log.log("Querying Bittrex", 2)
-                r = requests.get(
-                    'https://bittrex.com/api/v1.1/public/getmarketsummary?market=USD-BTC',
-                    timeout=30)
+                try:
+                    r = requests.get(
+                        'https://bittrex.com/api/v1.1/public/getmarketsummary?market=USD-BTC',
+                        timeout=30)
+                except requests.exceptions.RequestException as e:
+                    self.log.log(e.str, 1)
                 if r.status_code == 200:
                     d = r.json()['result'][0]
                     prices.append(float(d['Last']))
@@ -182,9 +194,12 @@ class PriceFeed():
 
             try:
                 self.log.log("Querying Poloniex", 2)
-                r = requests.get(
-                    'https://poloniex.com/public?command=returnTicker',
-                    timeout=30)
+                try:
+                    r = requests.get(
+                        'https://poloniex.com/public?command=returnTicker',
+                        timeout=30)
+                except requests.exceptions.RequestException as e:
+                    self.log.log(e.str, 1)
                 if r.status_code == 200:
                     d = r.json()['USDT_BTC']
                     prices.append(float(d['last']))
@@ -192,9 +207,12 @@ class PriceFeed():
                     self.log.log(logstr, 2)
 
                 self.log.log("Querying Bittrex", 2)
-                r = requests.get(
-                    'https://bittrex.com/api/v1.1/public/getmarketsummary?market=USDT-BTC',
-                    timeout=30)
+                try:
+                    r = requests.get(
+                        'https://bittrex.com/api/v1.1/public/getmarketsummary?market=USDT-BTC',
+                        timeout=30)
+                except requests.exceptions.RequestException as e:
+                    self.log.log(e.str, 1)
                 if r.status_code == 200:
                     d = r.json()['result'][0]
                     prices.append(float(d['Last']))
@@ -202,8 +220,11 @@ class PriceFeed():
                     self.log.log(logstr, 2)
 
                 self.log.log("Querying Binance", 2)
-                r = requests.get(
-                    'https://api.binance.com/api/v1/ticker/24hr', timeout=30)
+                try:
+                    r = requests.get(
+                        'https://api.binance.com/api/v1/ticker/24hr', timeout=30)
+                except requests.exceptions.RequestException as e:
+                    self.log.log(e.str, 1)
                 if r.status_code == 200:
                     d = [x for x in r.json() if x['symbol'] == 'BTCUSDT'][0]
                     prices.append(float(d['lastPrice']))
@@ -222,9 +243,12 @@ class PriceFeed():
 
             try:
                 self.log.log("Querying Bittrex", 2)
-                r = requests.get(
-                    'https://bittrex.com/api/v1.1/public/getmarketsummary?market=USD-USDT',
-                    timeout=30)
+                try:
+                    r = requests.get(
+                        'https://bittrex.com/api/v1.1/public/getmarketsummary?market=USD-USDT',
+                        timeout=30)
+                except requests.exceptions.RequestException as e:
+                    self.log.log(e.str, 1)
                 if r.status_code == 200:
                     d = r.json()['result'][0]
                     prices.append(float(d['Last']))
@@ -232,9 +256,12 @@ class PriceFeed():
                     self.log.log(logstr, 2)
 
                 self.log.log("Querying Kraken", 2)
-                r = requests.get(
-                    'https://api.kraken.com/0/public/Ticker?pair=USDTZUSD',
-                    timeout=30)
+                try:
+                    r = requests.get(
+                        'https://api.kraken.com/0/public/Ticker?pair=USDTZUSD',
+                        timeout=30)
+                except requests.exceptions.RequestException as e:
+                    self.log.log(e.str, 1)
                 if r.status_code == 200:
                     d = r.json()['result']['USDTZUSD']
                     prices.append(float(d['c'][0]))
@@ -301,8 +328,8 @@ class PriceFeed():
         self.pub_today = 0
         self.min_spread = spread
         self.last_price = self.stm.get_price_feed()
-        logstr = "Running price feeds with minimum spread {:.2f}\
-                and sleep time {:.2f} minutes.".format(
+        logstr = ("Running price feeds with minimum spread {:.2f}"
+                "and sleep time {:.2f} minutes.").format(
             self.min_spread, (slptime / 60))
         self.log.log(logstr, 1)
         while True:
