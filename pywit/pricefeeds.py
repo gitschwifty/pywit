@@ -117,38 +117,40 @@ class PriceFeed():
                     r = requests.get(
                         'https://bittrex.com/api/v1.1/public/getmarketsummary?market=BTC-STEEM',
                         timeout=30)
+                    if r.status_code == 200:
+                        d = r.json()['result'][0]
+                        prices.append(float(d['Last']))
+                        logstr = "Bittrex: {:.8f} BTC/STEEM".format(prices[-1])
+                        self.log.log(logstr, 2)
                 except requests.exceptions.RequestException as e:
                     self.log.log("A request exception occurred.", 1)
-                if r.status_code == 200:
-                    d = r.json()['result'][0]
-                    prices.append(float(d['Last']))
-                    logstr = "Bittrex: {:.8f} BTC/STEEM".format(prices[-1])
-                    self.log.log(logstr, 2)
 
                 self.log.log("Querying Binance", 2)
                 try:
                     r = requests.get(
                         'https://api.binance.com/api/v1/ticker/24hr', timeout=30)
+                    if r.status_code == 200:
+                        d = [x for x in r.json() if x['symbol'] == 'STEEMBTC'][0]
+                        prices.append(float(d['lastPrice']))
+                        logstr = "Binance: {:.8f} BTC/STEEM".format(prices[-1])
+                        self.log.log(logstr, 2)
                 except requests.exceptions.RequestException as e:
                     self.log.log("A request exception occurred.", 1)
-                if r.status_code == 200:
-                    d = [x for x in r.json() if x['symbol'] == 'STEEMBTC'][0]
-                    prices.append(float(d['lastPrice']))
-                    logstr = "Binance: {:.8f} BTC/STEEM".format(prices[-1])
-                    self.log.log(logstr, 2)
+                
 
                 self.log.log("Querying Poloniex", 2)
                 try:
                     r = requests.get(
                         'https://poloniex.com/public?command=returnTicker',
                         timeout=30)
+                    if r.status_code == 200:
+                        d = r.json()['BTC_STEEM']
+                        prices.append(float(d['last']))
+                        logstr = "Poloniex: {:.8f} BTC/STEEM".format(prices[-1])
+                        self.log.log(logstr, 2)
                 except requests.exceptions.RequestException as e:
                     self.log.log("A request exception occurred.", 1)
-                if r.status_code == 200:
-                    d = r.json()['BTC_STEEM']
-                    prices.append(float(d['last']))
-                    logstr = "Poloniex: {:.8f} BTC/STEEM".format(prices[-1])
-                    self.log.log(logstr, 2)
+                
 
                 if len(prices) == 3:
                     diff = self.get_percent_difference(prices[0], prices[2])
@@ -175,13 +177,13 @@ class PriceFeed():
                     r = requests.get(
                         'https://bittrex.com/api/v1.1/public/getmarketsummary?market=USD-BTC',
                         timeout=30)
+                    if r.status_code == 200:
+                        d = r.json()['result'][0]
+                        prices.append(float(d['Last']))
+                        logstr = "Bittrex: {:.4f} BTC/USD".format(prices[-1])
+                        self.log.log(logstr, 2)
                 except requests.exceptions.RequestException as e:
                     self.log.log("A request exception occurred.", 1)
-                if r.status_code == 200:
-                    d = r.json()['result'][0]
-                    prices.append(float(d['Last']))
-                    logstr = "Bittrex: {:.4f} BTC/USD".format(prices[-1])
-                    self.log.log(logstr, 2)
             except KeyError:
                 self.log.log("Key Error Occured.", 1)
                 self.log.pop_func()
@@ -198,38 +200,38 @@ class PriceFeed():
                     r = requests.get(
                         'https://poloniex.com/public?command=returnTicker',
                         timeout=30)
+                    if r.status_code == 200:
+                        d = r.json()['USDT_BTC']
+                        prices.append(float(d['last']))
+                        logstr = "Poloniex: {:.4f} USDT/BTC".format(prices[-1])
+                        self.log.log(logstr, 2)
                 except requests.exceptions.RequestException as e:
                     self.log.log("A request exception occurred.", 1)
-                if r.status_code == 200:
-                    d = r.json()['USDT_BTC']
-                    prices.append(float(d['last']))
-                    logstr = "Poloniex: {:.4f} USDT/BTC".format(prices[-1])
-                    self.log.log(logstr, 2)
 
                 self.log.log("Querying Bittrex", 2)
                 try:
                     r = requests.get(
                         'https://bittrex.com/api/v1.1/public/getmarketsummary?market=USDT-BTC',
                         timeout=30)
+                    if r.status_code == 200:
+                        d = r.json()['result'][0]
+                        prices.append(float(d['Last']))
+                        logstr = "Bittrex: {:.4f} USDT/BTC".format(prices[-1])
+                        self.log.log(logstr, 2)
                 except requests.exceptions.RequestException as e:
                     self.log.log("A request exception occurred.", 1)
-                if r.status_code == 200:
-                    d = r.json()['result'][0]
-                    prices.append(float(d['Last']))
-                    logstr = "Bittrex: {:.4f} USDT/BTC".format(prices[-1])
-                    self.log.log(logstr, 2)
 
                 self.log.log("Querying Binance", 2)
                 try:
                     r = requests.get(
                         'https://api.binance.com/api/v1/ticker/24hr', timeout=30)
+                    if r.status_code == 200:
+                        d = [x for x in r.json() if x['symbol'] == 'BTCUSDT'][0]
+                        prices.append(float(d['lastPrice']))
+                        logstr = "Binance: {:.4f} USDT/BTC".format(prices[-1])
+                        self.log.log(logstr, 2)
                 except requests.exceptions.RequestException as e:
                     self.log.log("A request exception occurred.", 1)
-                if r.status_code == 200:
-                    d = [x for x in r.json() if x['symbol'] == 'BTCUSDT'][0]
-                    prices.append(float(d['lastPrice']))
-                    logstr = "Binance: {:.4f} USDT/BTC".format(prices[-1])
-                    self.log.log(logstr, 2)
             except KeyError:
                 self.log.log("Key Error Occured.", 1)
                 self.log.pop_func()
@@ -247,26 +249,27 @@ class PriceFeed():
                     r = requests.get(
                         'https://bittrex.com/api/v1.1/public/getmarketsummary?market=USD-USDT',
                         timeout=30)
+                    if r.status_code == 200:
+                        d = r.json()['result'][0]
+                        prices.append(float(d['Last']))
+                        logstr = "Bittrex: {:.4f} USD/USDT".format(prices[-1])
+                        self.log.log(logstr, 2)
                 except requests.exceptions.RequestException as e:
                     self.log.log("A request exception occurred.", 1)
-                if r.status_code == 200:
-                    d = r.json()['result'][0]
-                    prices.append(float(d['Last']))
-                    logstr = "Bittrex: {:.4f} USD/USDT".format(prices[-1])
-                    self.log.log(logstr, 2)
-
+            
                 self.log.log("Querying Kraken", 2)
                 try:
                     r = requests.get(
                         'https://api.kraken.com/0/public/Ticker?pair=USDTZUSD',
                         timeout=30)
+                    if r.status_code == 200:
+                        d = r.json()['result']['USDTZUSD']
+                        prices.append(float(d['c'][0]))
+                        logstr = "Kraken: {:.4f} USD/USDT".format(prices[-1])
+                        self.log.log(logstr, 2)
                 except requests.exceptions.RequestException as e:
                     self.log.log("A request exception occurred.", 1)
-                if r.status_code == 200:
-                    d = r.json()['result']['USDTZUSD']
-                    prices.append(float(d['c'][0]))
-                    logstr = "Kraken: {:.4f} USD/USDT".format(prices[-1])
-                    self.log.log(logstr, 2)
+                
             except KeyError:
                 self.log.log("Key Error Occured.", 1)
                 self.log.pop_func()
